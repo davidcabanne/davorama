@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -23,6 +24,7 @@ const Placeholder = styled(Link)`
   position: relative;
   width: 100%;
   aspect-ratio: 3601 / 2433;
+  grid-column: ${({ fullWidth }) => (fullWidth ? '1 / -1' : 'auto')};
 
   & img {
     position: absolute;
@@ -32,13 +34,35 @@ const Placeholder = styled(Link)`
 `;
 
 export default function Grid({ posts }) {
+  const [columns, setColumns] = useState(2);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setColumns(
+        window.innerWidth <= parseInt(_var.device.tablet_max.replace('px', ''))
+          ? 1
+          : 2,
+      );
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const isLastItemFullWidth = posts.length % columns === 1;
+
   return (
     <Container>
-      {posts?.map((post) => {
+      {posts?.map((post, index) => {
         return (
           <Placeholder
             key={post?.id}
             href={`/post/${encodeURIComponent(post.slug.current)}`}
+            fullWidth={isLastItemFullWidth && index === posts.length - 1} // Pass fullWidth true for the last item if conditions are met
           >
             <Image
               src={post?.mainImage.asset.url}

@@ -13,15 +13,17 @@ const Container = styled.div`
   ${(props) =>
     props.$card
       ? `
-    & div {
-    opacity: 0;
-    transform: translateY(8px);
-    transition: 200ms ${_var.cubicBezier};
-    transition-property: opacity, transform;
-    }
-    &:hover div {
-      opacity: 1;
-      transform: translateY(0px);
+    @media ${_var.device.tablet_min} {
+      & div {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: 200ms ${_var.cubicBezier};
+      transition-property: opacity, transform;
+      }
+      &:hover div {
+        opacity: 1;
+        transform: translateY(0px);
+      }
     }
   `
       : ''}

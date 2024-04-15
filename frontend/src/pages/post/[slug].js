@@ -31,21 +31,45 @@ const Modal = styled.div`
   opacity: 0;
   z-index: 2;
 
+  // transition => out
+  transition: 500ms ${_var.cubicBezier};
+  transition-property: opacity;
+  transition-delay: 300ms;
+
+  & img {
+    // transition => out
+    transform: translateY(16px);
+    transition: 1000ms ${_var.cubicBezier};
+    transition-property: transform;
+    transition-delay: 01ms;
+  }
+
   &.active {
     opacity: 1;
+    // transition => in
+    transition: 500ms ${_var.cubicBezier};
+    transition-delay: 01ms;
+
+    & img {
+      // transition => in
+      transition: 500ms ${_var.cubicBezier};
+      transform: translateY(0px);
+      transition-delay: 100ms;
+    }
   }
 `;
 
 const ModalPlaceholder = styled.div`
   position: relative;
   width: 100%;
+  max-width: calc(100vw - ${_var.headerHeight});
+  height: 100%;
+  max-height: calc(100vh - (${_var.headerHeight} * 2));
   aspect-ratio: 3601 / 2433;
 
   & img {
     position: absolute;
-    inset: 0;
-    aspect-ratio: 3601 / 2433;
-    padding: ${_var.spaceS};
+    object-fit: contain;
   }
 `;
 
@@ -56,6 +80,20 @@ const Post = ({ post }) => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setActive(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
     };
   }, []);
 
