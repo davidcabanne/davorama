@@ -1,7 +1,7 @@
-import RootLayout from "./rootLayout/rootLayout";
+import RootLayout from './rootLayout/rootLayout';
 
-import { createGlobalStyle } from "styled-components";
-import * as _var from "../styles/variables";
+import { createGlobalStyle } from 'styled-components';
+import * as _var from '../styles/variables';
 
 const GlobalStyle = createGlobalStyle`
 *,
@@ -54,16 +54,11 @@ html {
   /* RESPONSIVE HEIGHT FALLBACK for iOS tool bar */
   height: -webkit-fill-available;
   scroll-behavior: smooth;
-  background: white;
 }
 
 a:not([class]) {
   text-decoration: none;
   text-decoration-skip-ink: auto;
-}
-
-a:visited {
-    color: black;
 }
 
 h1 {
