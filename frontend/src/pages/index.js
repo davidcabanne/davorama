@@ -1,4 +1,5 @@
 import client from '@/lib/sanityClient';
+import Link from 'next/link';
 import Image from 'next/image';
 import styled from 'styled-components';
 
@@ -15,7 +16,7 @@ const Grid = styled.div`
   }
 `;
 
-const Placeholder = styled.div`
+const Placeholder = styled(Link)`
   position: relative;
   width: 100%;
   aspect-ratio: 3601 / 2433;
@@ -27,7 +28,7 @@ const Placeholder = styled.div`
   }
 
   &:hover div {
-  opacity: 1;
+    opacity: 1;
   }
 `;
 
@@ -45,7 +46,10 @@ export default function Home({ posts }) {
     <Grid>
       {posts.map((post) => {
         return (
-          <Placeholder key={post?.id}>
+          <Placeholder
+            key={post?.id}
+            href={`/post/${encodeURIComponent(post.slug.current)}`}
+          >
             <Image
               src={post?.mainImage.asset.url}
               alt={post?.title}
@@ -66,6 +70,7 @@ export async function getStaticProps() {
   const query = `
   *[_type == "post"] | order(publishedAt desc) {
     'id': _id,
+    slug,
     title,
     mainImage {
       asset->

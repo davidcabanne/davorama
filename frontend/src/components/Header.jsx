@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 import * as _var from '../styles/variables';
 
@@ -23,7 +24,7 @@ const Container = styled.header`
 const Header = () => {
   return (
     <Container id="#top">
-      <a>DAVORAMA(S)</a>
+      <Link href="/">- DAVORAMA(S)</Link>
     </Container>
   );
 };
