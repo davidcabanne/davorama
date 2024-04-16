@@ -23,22 +23,26 @@ const Container = styled.section`
 
 const Slider = styled.div`
   position: absolute;
-  bottom: 16px;
-  left: 16px;
+  bottom: 0px;
+  left: 0px;
   width: 100%;
-  height: 16px;
+  height: 4px;
   display: flex;
-  gap: 16px;
 `;
 
 const NavigationDot = styled.div`
   background: rgba(250, 250, 250, 0.15);
-  width: 8px;
-  height: 8px;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
   transition: 500ms ${_var.cubicBezier};
   transition-property: background;
+
+  &:hover {
+    -webkit-box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
+    -moz-box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
+    box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
+  }
 `;
 
 const Hero = ({ posts }) => {

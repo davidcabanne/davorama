@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -12,11 +12,10 @@ const Container = styled.section`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: 2px;
-  background: white;
+  background: black;
 
   @media ${_var.device.tablet_max} {
-    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -25,6 +24,13 @@ const Placeholder = styled(Link)`
   width: 100%;
   aspect-ratio: 3601 / 2433;
   grid-column: ${({ fullWidth }) => (fullWidth ? '1 / -1' : 'auto')};
+  opacity: ${({ isVisible }) => 0.8 + isVisible};
+  filter: ${({ isVisible }) => `grayscale(${1 - isVisible})`};
+  overflow: hidden;
+
+  transition: 50ms ${_var.cubicBezier};
+  transition-property: opacity, filter, transform;
+  transition-delay: 10ms;
 
   & img {
     position: absolute;
@@ -35,6 +41,8 @@ const Placeholder = styled(Link)`
 
 export default function Grid({ posts }) {
   const [columns, setColumns] = useState(2);
+  const [visible, setVisible] = useState(new Array(posts.length).fill(false));
+  const placeholdersRef = useRef(new Array(posts.length).fill(null));
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,11 +55,53 @@ export default function Grid({ posts }) {
 
     handleResize();
     window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = placeholdersRef.current.indexOf(entry.target);
+          if (index !== -1) {
+            setVisible((prev) => {
+              const newVisible = [...prev];
+              newVisible[index] = entry.intersectionRatio;
+              return newVisible;
+            });
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: buildThresholdList(),
+      },
+    );
+
+    placeholdersRef.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      placeholdersRef.current.forEach((el) => {
+        if (el) observer.unobserve(el);
+      });
     };
-  }, []);
+  }, [posts]);
+
+  function buildThresholdList() {
+    let thresholds = [];
+    let numSteps = 1000; // Increase this number for smoother transitions
+
+    for (let i = 1.0; i <= numSteps; i++) {
+      let ratio = i / numSteps;
+      thresholds.push(ratio);
+    }
+
+    thresholds.push(0); // Ensure we cover 0 to handle elements going out of view
+    return thresholds;
+  }
 
   const isLastItemFullWidth = posts.length % columns === 1;
 
@@ -62,7 +112,9 @@ export default function Grid({ posts }) {
           <Placeholder
             key={post?.id}
             href={`/post/${encodeURIComponent(post.slug.current)}`}
-            fullWidth={isLastItemFullWidth && index === posts.length - 1} // Pass fullWidth true for the last item if conditions are met
+            fullWidth={isLastItemFullWidth && index === posts.length - 1}
+            isVisible={visible[index]}
+            ref={(el) => (placeholdersRef.current[index] = el)}
           >
             <Image
               src={post?.mainImage.asset.url}

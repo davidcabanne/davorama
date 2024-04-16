@@ -45,7 +45,7 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Hanken Grotesk", Helvetica, sans-serif;
+  font-family: "Inter", Helvetica, sans-serif;
   font-size: 16px;
   overflow-x: hidden;
 }
