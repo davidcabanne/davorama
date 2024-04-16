@@ -1,11 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import client from '@/lib/sanityClient';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import * as _var from '@/styles/variables';
 
 import Title from '@/components/Title';
+
+const isLoadingAnimation = keyframes`
+  0% {
+  opacity: 1;
+  }
+  100% {
+   opacity: .5;
+  }
+  `;
+
+const hasLoadedAnimation = keyframes`
+  0% {
+  opacity: 1;
+  }
+  100% {
+   opacity: 0;
+  }
+  `;
 
 const Placeholder = styled.div`
   position: relative;
@@ -18,6 +36,15 @@ const Placeholder = styled.div`
     position: absolute;
     inset: 0;
     object-fit: cover;
+
+    &.isLoading {
+      animation: 1000ms ${isLoadingAnimation} linear;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+    &.hasLoaded {
+      animation: 500ms ${hasLoadedAnimation} ${_var.cubicBezier} forwards;
+    }
   }
 `;
 
@@ -73,7 +100,34 @@ const ModalPlaceholder = styled.div`
   }
 `;
 
+const Loading = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+
+  & p {
+    position: relative;
+    color: black;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &.isLoading {
+    animation: 1000ms ${isLoadingAnimation} linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  &.hasLoaded {
+    animation: 500ms ${hasLoadedAnimation} ${_var.cubicBezier} forwards;
+  }
+`;
+
 const Post = ({ post }) => {
+  const [isLoading, setLoading] = useState(true);
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -103,6 +157,9 @@ const Post = ({ post }) => {
 
   return (
     <Placeholder onClick={() => handleOnClick()}>
+      <Loading className={isLoading ? 'isLoading' : 'hasLoaded'}>
+        <p>Loading...</p>
+      </Loading>
       <Image
         src={post?.mainImage.asset.url}
         alt={post?.title}
@@ -110,6 +167,14 @@ const Post = ({ post }) => {
         fill={true}
         blurDataURL={post?.mainImage.asset.metadata.lqip}
         sizes="100vw"
+        onLoad={() => setLoading(false)}
+      />
+      <Image
+        src={post?.mainImage.asset.metadata.lqip}
+        alt={post?.title}
+        fill={true}
+        sizes="100vw"
+        className={isLoading ? 'isLoading' : 'hasLoaded'}
       />
       <Title>{post?.title}</Title>
       <Modal className={active ? 'active' : ''}>

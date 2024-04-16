@@ -7,6 +7,17 @@ import * as _var from '../styles/variables';
 
 import Title from './Title';
 
+const gridMotion = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+  }
+  `;
+
 const Container = styled.section`
   position: relative;
   width: 100%;
@@ -29,14 +40,17 @@ const Placeholder = styled(Link)`
     position: absolute;
     inset: 0;
     object-fit: cover;
+    opacity: 0;
+    animation: 1000ms ${gridMotion} ${_var.cubicBezier} forwards;
+    animation-delay: ${({ $index }) => `${$index * 25}ms`};
   }
 
-  // => <Title />
+  // <Title />
   & :nth-child(1) {
     z-index: 3;
   }
 
-  // => <Image />
+  // <Image />
   & :nth-child(2) {
     z-index: 0;
   }
@@ -116,6 +130,7 @@ export default function Grid({ posts }) {
             key={post?.id}
             href={`/post/${encodeURIComponent(post.slug.current)}`}
             $fullWidth={isLastItemFullWidth && index === posts.length - 1}
+            $index={index}
             ref={(el) => (placeholdersRef.current[index] = el)}
           >
             <Title card>{post.title}</Title>
