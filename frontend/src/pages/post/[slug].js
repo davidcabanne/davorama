@@ -97,12 +97,12 @@ const Post = ({ post }) => {
     };
   }, []);
 
-  const handleOnClick = (event) => {
+  const handleOnClick = () => {
     setActive(!active);
   };
 
   return (
-    <Placeholder onClick={(event) => handleOnClick(event)}>
+    <Placeholder onClick={() => handleOnClick()}>
       <Image
         src={post?.mainImage.asset.url}
         alt={post?.title}

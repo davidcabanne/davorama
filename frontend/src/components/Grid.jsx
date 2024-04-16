@@ -12,7 +12,6 @@ const Container = styled.section`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: black;
 
   @media ${_var.device.tablet_max} {
     grid-template-columns: 1fr;
@@ -23,25 +22,46 @@ const Placeholder = styled(Link)`
   position: relative;
   width: 100%;
   aspect-ratio: 3601 / 2433;
-  grid-column: ${({ fullWidth }) => (fullWidth ? '1 / -1' : 'auto')};
-  opacity: ${({ isVisible }) => 0.8 + isVisible};
-  filter: ${({ isVisible }) => `grayscale(${1 - isVisible})`};
+  grid-column: ${({ $fullWidth }) => ($fullWidth ? '1 / -1' : 'auto')};
   overflow: hidden;
-
-  transition: 50ms ${_var.cubicBezier};
-  transition-property: opacity, filter, transform;
-  transition-delay: 10ms;
 
   & img {
     position: absolute;
     inset: 0;
     object-fit: cover;
   }
+
+  // => <Title />
+  & :nth-child(1) {
+    z-index: 3;
+  }
+
+  // => <Image />
+  & :nth-child(2) {
+    z-index: 0;
+  }
+
+  // => <Image />
+  & :nth-child(3) {
+    filter: grayscale(1);
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -1;
+  }
 `;
 
 export default function Grid({ posts }) {
   const [columns, setColumns] = useState(2);
-  const [visible, setVisible] = useState(new Array(posts.length).fill(false));
+
+  // Initialize with 0% visible
+  const [visible, setVisible] = useState(new Array(posts.length).fill(0));
   const placeholdersRef = useRef(new Array(posts.length).fill(null));
 
   useEffect(() => {
@@ -64,9 +84,11 @@ export default function Grid({ posts }) {
         entries.forEach((entry) => {
           const index = placeholdersRef.current.indexOf(entry.target);
           if (index !== -1) {
+            // returns the % of the item that's visible
+            const visibility = entry.intersectionRatio;
             setVisible((prev) => {
               const newVisible = [...prev];
-              newVisible[index] = entry.intersectionRatio;
+              newVisible[index] = visibility;
               return newVisible;
             });
           }
@@ -75,47 +97,39 @@ export default function Grid({ posts }) {
       {
         root: null,
         rootMargin: '0px',
-        threshold: buildThresholdList(),
+        // Generate thresholds from 0 to 1 at 0.01 intervals
+        threshold: Array.from({ length: 100 }, (_, i) => i / 100),
       },
     );
 
-    placeholdersRef.current.forEach((el) => {
-      if (el) observer.observe(el);
+    const currentPlaceholders = placeholdersRef.current;
+    currentPlaceholders.forEach((element) => {
+      if (element) observer.observe(element);
     });
 
     return () => {
-      placeholdersRef.current.forEach((el) => {
-        if (el) observer.unobserve(el);
+      currentPlaceholders.forEach((element) => {
+        if (element) observer.unobserve(element);
       });
     };
   }, [posts]);
-
-  function buildThresholdList() {
-    let thresholds = [];
-    let numSteps = 1000; // Increase this number for smoother transitions
-
-    for (let i = 1.0; i <= numSteps; i++) {
-      let ratio = i / numSteps;
-      thresholds.push(ratio);
-    }
-
-    thresholds.push(0); // Ensure we cover 0 to handle elements going out of view
-    return thresholds;
-  }
 
   const isLastItemFullWidth = posts.length % columns === 1;
 
   return (
     <Container>
       {posts?.map((post, index) => {
+        // const rotation = 10 * (1 - visible[index]);
+        // const perspective = '2000px';
+        // const scale = '1.05';
         return (
           <Placeholder
             key={post?.id}
             href={`/post/${encodeURIComponent(post.slug.current)}`}
-            fullWidth={isLastItemFullWidth && index === posts.length - 1}
-            isVisible={visible[index]}
+            $fullWidth={isLastItemFullWidth && index === posts.length - 1}
             ref={(el) => (placeholdersRef.current[index] = el)}
           >
+            <Title card>{post.title}</Title>
             <Image
               src={post?.mainImage.asset.url}
               alt={post?.title}
@@ -123,8 +137,23 @@ export default function Grid({ posts }) {
               fill={true}
               blurDataURL={post?.mainImage.asset.metadata.lqip}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{
+                opacity: 0.25 + visible[index],
+                // transform: `perspective(${perspective}) rotateX(${rotation}deg) scale(${scale})`,
+              }}
             />
-            <Title card>{post.title}</Title>
+            <Image
+              src={post?.mainImage.asset.url}
+              alt={post?.title}
+              placeholder="blur"
+              fill={true}
+              blurDataURL={post?.mainImage.asset.metadata.lqip}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{
+                opacity: 1 - visible[index],
+                // transform: `perspective(${perspective}) rotateX(${rotation}deg) scale(${scale})`,
+              }}
+            />
           </Placeholder>
         );
       })}

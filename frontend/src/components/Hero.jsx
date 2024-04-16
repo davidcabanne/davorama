@@ -3,8 +3,6 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import * as _var from '../styles/variables';
 
-const timing = 6000;
-
 const Container = styled.section`
   position: relative;
   width: 100vw;
@@ -45,7 +43,7 @@ const NavigationDot = styled.div`
   }
 `;
 
-const Hero = ({ posts }) => {
+const Hero = ({ posts, duration }) => {
   const containerRef = useRef(null);
   const [offsetY, setOffsetY] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
@@ -60,10 +58,10 @@ const Hero = ({ posts }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prevIndex) => (prevIndex + 1) % posts.length);
-    }, timing);
+    }, duration);
 
     return () => clearInterval(interval);
-  }, [posts.length]);
+  }, [posts.length, duration]);
 
   const handleDotClick = (index) => {
     setCurrentImage(index);

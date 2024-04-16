@@ -14,7 +14,7 @@ export default function Home({ posts }) {
 
   return (
     <>
-      <Hero posts={featuredPosts} />
+      <Hero posts={featuredPosts} duration={10000} />
       <Grid posts={posts} />
     </>
   );

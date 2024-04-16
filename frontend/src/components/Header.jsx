@@ -16,7 +16,6 @@ const Container = styled.header`
 
   & a {
     color: white;
-    font-weight: 600;
     cursor: pointer;
   }
 `;
@@ -35,6 +34,12 @@ const Wrapper = styled.nav`
     justify-content: space-between;
   }
 `;
+
+const Logo = styled(Link)`
+  font-size: 24px;
+  font-weight: 500;
+  text-decoration: none;
+  `;
 
 const Svg = styled.svg`
   transform: translateX(0px);
@@ -55,7 +60,7 @@ const Header = () => {
       <Wrapper>
         <ul>
           <li>
-            <Link href="/">(( DAVORAMA ))</Link>
+            <Logo href="/">(( DAVORAMA ))</Logo>
           </li>
           {pathname !== '/' && (
             <li>
