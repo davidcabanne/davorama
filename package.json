@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@sanity/client": "^6.15.13",
+    "@sanity/image-url": "^1.0.2",
+    "groq": "^3.37.2",
+    "next": "14.2.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "styled-components": "^6.1.8"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^2.1.4",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.1"
+  }
+}
