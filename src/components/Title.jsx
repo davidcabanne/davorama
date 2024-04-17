@@ -54,9 +54,9 @@ const Name = styled.div`
   }
 `;
 
-const Title = ({ children, card }) => {
+const Title = ({ children, card, ...props }) => {
   return (
-    <Container $card={card}>
+    <Container $card={card} {...props}>
       <Name>
         <span>{children}</span>
         <span>{children}</span>

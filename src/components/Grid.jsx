@@ -23,6 +23,7 @@ const Container = styled.section`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  background: #2b303a;
 
   @media ${_var.device.tablet_max} {
     grid-template-columns: 1fr;
@@ -33,8 +34,8 @@ const Placeholder = styled(Link)`
   position: relative;
   width: 100%;
   aspect-ratio: 3601 / 2433;
-  grid-column: ${({ $fullWidth }) => ($fullWidth ? '1 / -1' : 'auto')};
   overflow: hidden;
+  will-change: opacity;
 
   & img {
     position: absolute;
@@ -45,12 +46,12 @@ const Placeholder = styled(Link)`
     animation-delay: ${({ $index }) => `${$index * 25}ms`};
   }
 
-  // <Title />
+  // Title
   & :nth-child(1) {
     z-index: 3;
   }
 
-  // <Image />
+  // Image
   & :nth-child(2) {
     z-index: 0;
   }
@@ -61,28 +62,13 @@ const Filter = styled.div`
   inset: 0;
   backdrop-filter: grayscale(1);
   z-index: 2;
+  will-change: opacity;
 `;
 
 export default function Grid({ posts }) {
-  const [columns, setColumns] = useState(2);
-
   // Initialize with 0% visible
   const [visible, setVisible] = useState(new Array(posts.length).fill(0));
   const placeholdersRef = useRef(new Array(posts.length).fill(null));
-
-  useEffect(() => {
-    const handleResize = () => {
-      setColumns(
-        window.innerWidth <= parseInt(_var.device.tablet_max.replace('px', ''))
-          ? 1
-          : 2,
-      );
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -120,8 +106,6 @@ export default function Grid({ posts }) {
     };
   }, [posts]);
 
-  const isLastItemFullWidth = posts.length % columns === 1;
-
   return (
     <Container>
       {posts?.map((post, index) => {
@@ -129,9 +113,11 @@ export default function Grid({ posts }) {
           <Placeholder
             key={post?.id}
             href={`/post/${encodeURIComponent(post.slug.current)}`}
-            $fullWidth={isLastItemFullWidth && index === posts.length - 1}
             $index={index}
             ref={(el) => (placeholdersRef.current[index] = el)}
+            style={{
+              opacity: 0.75 + visible[index],
+            }}
           >
             <Title card>{post.title}</Title>
             <Image

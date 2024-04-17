@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { decode } from 'blurhash';
+
 import * as _var from '../styles/variables';
+
+import Slider from './Slider';
+
+const hasLoadedAnimationStatic = keyframes`
+  0% {
+  opacity: 1;
+  }
+  100% {
+   opacity: 0;
+  }
+  `;
 
 const Container = styled.section`
   position: relative;
@@ -9,6 +22,7 @@ const Container = styled.section`
   height: 100vh;
   display: flex;
   overflow: hidden;
+  background: #2b303a;
 
   & img {
     position: absolute;
@@ -16,39 +30,58 @@ const Container = styled.section`
     object-fit: cover;
     opacity: 0;
     transition: opacity 500ms ${_var.cubicBezier};
+    will-change: opacity, transform;
   }
 `;
 
-const Slider = styled.div`
+const Canvas = styled.canvas`
   position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 4px;
-  display: flex;
-`;
-
-const NavigationDot = styled.div`
-  background: rgba(250, 250, 250, 0.15);
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  cursor: pointer;
-  transition: 500ms ${_var.cubicBezier};
-  transition-property: background;
+  pointer-events: none;
 
-  &:hover {
-    -webkit-box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
-    -moz-box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
-    box-shadow: inset 0px 0px 0px 10px rgba(250, 250, 250, 0.35);
+  &.hasLoadedStatic {
+    animation: 300ms ${hasLoadedAnimationStatic} ${_var.cubicBezier} forwards;
+    animation-delay: 200ms;
   }
 `;
 
 const Hero = ({ posts, duration }) => {
   const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  const [isLoading, setLoading] = useState(true);
   const [offsetY, setOffsetY] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
 
   const handleScroll = () => setOffsetY(window.scrollY);
+
+  const handleSetCurrentImage = (value) => {
+    setCurrentImage(value);
+  };
+
+  useEffect(() => {
+    if (posts && canvasRef.current) {
+      const width = 32;
+      const height = 32;
+      const pixels = decode(
+        posts[0].mainImage.asset.metadata.blurHash,
+        width,
+        height,
+      );
+      const ctx = canvasRef.current.getContext('2d');
+      const imageData = new ImageData(
+        new Uint8ClampedArray(pixels),
+        width,
+        height,
+      );
+      canvasRef.current.width = width;
+      canvasRef.current.height = height;
+      ctx.putImageData(imageData, 0, 0);
+    }
+  }, [posts]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -61,20 +94,7 @@ const Hero = ({ posts, duration }) => {
     }, duration);
 
     return () => clearInterval(interval);
-  }, [posts.length, duration]);
-
-  const handleDotClick = (index) => {
-    setCurrentImage(index);
-  };
-
-  const navigationDotStyle = (index) => {
-    return {
-      background:
-        index === currentImage
-          ? 'rgba(250, 250, 250, .75)'
-          : 'rgba(250, 250, 250, 0.15)',
-    };
-  };
+  }, [posts.length, duration, currentImage]);
 
   return (
     <Container ref={containerRef}>
@@ -85,10 +105,13 @@ const Hero = ({ posts, duration }) => {
             index={index}
             src={post?.mainImage.asset.url}
             alt={post?.title}
+            priority={true}
             placeholder="blur"
             fill={true}
             blurDataURL={post?.mainImage.asset.metadata.lqip}
             sizes="100vw"
+            onLoad={() => setLoading(false)}
+            className={isLoading ? 'isLoading' : 'hasLoaded'}
             style={{
               transform: `translateY(${offsetY * 0.05}px)`,
               opacity: index === currentImage ? 1 : 0,
@@ -96,18 +119,17 @@ const Hero = ({ posts, duration }) => {
           />
         );
       })}
-      <Slider>
-        {posts?.map((post, index) => {
-          return (
-            <NavigationDot
-              key={post?.id}
-              onClick={() => handleDotClick(index)}
-              $index={index}
-              style={navigationDotStyle(index)}
-            />
-          );
-        })}
-      </Slider>
+      <Canvas
+        ref={canvasRef}
+        className={isLoading ? 'isLoadingStatic' : 'hasLoadedStatic'}
+      />
+      <Slider
+        posts={posts}
+        currentImage={currentImage}
+        handleSetCurrentImage={handleSetCurrentImage}
+        duration={duration}
+        height={2}
+      />
     </Container>
   );
 };

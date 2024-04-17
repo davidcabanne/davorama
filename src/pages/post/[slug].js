@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import client from '@/lib/sanityClient';
 import styled, { keyframes } from 'styled-components';
+import { decode } from 'blurhash';
 
 import * as _var from '@/styles/variables';
 
@@ -17,6 +18,15 @@ const isLoadingAnimation = keyframes`
   `;
 
 const hasLoadedAnimation = keyframes`
+  0% {
+  opacity:0;
+  }
+  100% {
+   opacity: 1;
+  }
+  `;
+
+const hasLoadedAnimationStatic = keyframes`
   0% {
   opacity: 1;
   }
@@ -38,13 +48,30 @@ const Placeholder = styled.div`
     object-fit: cover;
 
     &.isLoading {
-      animation: 1000ms ${isLoadingAnimation} linear;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
+      opacity: 0;
     }
     &.hasLoaded {
-      animation: 500ms ${hasLoadedAnimation} ${_var.cubicBezier} forwards;
+      animation: 200ms ${hasLoadedAnimation} ${_var.cubicBezier} forwards;
     }
+  }
+`;
+
+const Canvas = styled.canvas`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  &.isLoadingStatic {
+    animation: 1000ms ${isLoadingAnimation} linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  &.hasLoadedStatic {
+    animation: 300ms ${hasLoadedAnimationStatic} ${_var.cubicBezier} forwards;
+    animation-delay: 200ms;
   }
 `;
 
@@ -106,11 +133,15 @@ const Loading = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  filter: blur(0px);
+  transform: translateY(0px);
+  transition: 500ms ${_var.cubicBezier};
+  transition-property: filter, transform;
   z-index: 10;
 
   & p {
     position: relative;
-    color: black;
+    color: rgba(0, 0, 0, .5);
     font-size: 24px;
     font-weight: 500;
   }
@@ -122,13 +153,40 @@ const Loading = styled.div`
   }
 
   &.hasLoaded {
-    animation: 500ms ${hasLoadedAnimation} ${_var.cubicBezier} forwards;
+    filter: blur(16px);
+    transform: translateY(8px);
+    transition-delay: 250ms;
+    animation: 200ms ${hasLoadedAnimationStatic} ${_var.cubicBezier} forwards;
+    animation-delay: 350ms;
+  }
+`;
+
+const StyledTitle = styled(Title)`
+  & > div {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: 200ms ${_var.cubicBezier};
+    transition-property: opacity, transform;
+    transition-delay: 200ms;
+  }
+
+  &.isLoading {
+    & > div {
+      opacity: 0;
+    }
+  }
+  &.hasLoaded {
+    & > div {
+      opacity: 1;
+      transform: translateX(0px);
+    }
   }
 `;
 
 const Post = ({ post }) => {
   const [isLoading, setLoading] = useState(true);
   const [active, setActive] = useState(false);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -151,6 +209,27 @@ const Post = ({ post }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (post?.mainImage.asset.metadata.blurHash && canvasRef.current) {
+      const width = 32;
+      const height = 32;
+      const pixels = decode(
+        post.mainImage.asset.metadata.blurHash,
+        width,
+        height,
+      );
+      const ctx = canvasRef.current.getContext('2d');
+      const imageData = new ImageData(
+        new Uint8ClampedArray(pixels),
+        width,
+        height,
+      );
+      canvasRef.current.width = width;
+      canvasRef.current.height = height;
+      ctx.putImageData(imageData, 0, 0);
+    }
+  }, [post]);
+
   const handleOnClick = () => {
     setActive(!active);
   };
@@ -168,15 +247,15 @@ const Post = ({ post }) => {
         blurDataURL={post?.mainImage.asset.metadata.lqip}
         sizes="100vw"
         onLoad={() => setLoading(false)}
-      />
-      <Image
-        src={post?.mainImage.asset.metadata.lqip}
-        alt={post?.title}
-        fill={true}
-        sizes="100vw"
         className={isLoading ? 'isLoading' : 'hasLoaded'}
       />
-      <Title>{post?.title}</Title>
+      <Canvas
+        ref={canvasRef}
+        className={isLoading ? 'isLoadingStatic' : 'hasLoadedStatic'}
+      />
+      <StyledTitle className={isLoading ? 'isLoading' : 'hasLoaded'}>
+        {post?.title}
+      </StyledTitle>
       <Modal className={active ? 'active' : ''}>
         <ModalPlaceholder>
           <Image
