@@ -1,6 +1,6 @@
-import Document from 'next/document';
-import { Html, Head, Main, NextScript } from 'next/document';
-import { ServerStyleSheet } from 'styled-components';
+import Document from "next/document";
+import { Html, Head, Main, NextScript } from "next/document";
+import { ServerStyleSheet } from "styled-components";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -31,9 +31,6 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <title>Davorama</title>
-        <meta name="description" content="description" />
-
         <meta property="og:title" content="Davorama" />
         <meta property="og:url" content="https://www.davorama.com" />
         <meta property="og:site_name" content="Davorama" />
@@ -53,17 +50,8 @@ class MyDocument extends Document {
 
         <meta name="keywords" content="Davorama" />
         <meta name="theme-color" content="#ffffff" />
-        <link
-          rel="icon"
-          type="image/x-icon"
-          sizes="any"
-          href="/favicon.ico"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/favicon.ico"
-        />
+        <link rel="icon" type="image/x-icon" sizes="any" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
         <link
           rel="icon"
           type="image/x-icon"
