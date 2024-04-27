@@ -10,6 +10,11 @@ const Container = styled.div`
   align-items: flex-end;
   padding: ${_var.spaceS};
 
+  // prevent <Title /> to appear on mobile
+  & div {
+    opacity: 0;
+  }
+
   ${(props) =>
     props.$card
       ? `
