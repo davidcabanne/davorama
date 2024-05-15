@@ -4,29 +4,9 @@ import * as _var from "../../styles/variables";
 
 import useElementOnScreen from "../../../hooks/useElementOnScreen";
 
+import { Section, Wrapper } from "./Section";
+
 const transitionOption = `500ms ${_var.cubicBezier}`;
-
-const Container = styled.section`
-  position: relative;
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: ${_var.spaceL};
-`;
-
-const Wrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 16px;
-  padding: ${_var.spaceL} ${_var.spaceS};
-`;
 
 const SpaceTimeContainer = styled.div`
   display: flex;
@@ -159,7 +139,7 @@ const Space = () => {
   }, [containerRef, isVisible]);
 
   return (
-    <Container>
+    <Section>
       <Wrapper>
         <p style={{ textAlign: "center", fontFamily: "Georgia" }}>
           Gravity is a Lie,
@@ -386,7 +366,7 @@ const Space = () => {
           </div>
         </SpaceTimeContainer>
       </Wrapper>
-    </Container>
+    </Section>
   );
 };
 

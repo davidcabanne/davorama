@@ -4,27 +4,7 @@ import * as _var from "../../styles/variables";
 
 import useWindowWidth from "../../../hooks/useWindowWidth";
 
-const Container = styled.section`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Wrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: ${_var.spaceS};
-  padding: ${_var.spaceL} ${_var.spaceS};
-`;
+import { Section, Wrapper } from "./Section";
 
 const CapitalismContainer = styled.div`
   position: relative;
@@ -124,7 +104,7 @@ const Works = () => {
   };
 
   return (
-    <Container>
+    <Section $capitalism>
       <Wrapper>
         <TitlePanel
           style={{
@@ -144,7 +124,7 @@ const Works = () => {
           {handleRenderParagraphs(25, "Socialism")}
         </CapitalismContainer>
       </Wrapper>
-    </Container>
+    </Section>
   );
 };
 
