@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import styled, { keyframes } from 'styled-components';
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import styled, { keyframes } from "styled-components";
 
-import * as _var from '../styles/variables';
+import * as _var from "../../styles/variables";
 
-import Title from './Title';
+import Title from "../Title";
 
 const gridMotion = keyframes`
   0% {
@@ -23,7 +23,7 @@ const Container = styled.section`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  background: #2b303a;
+  background: ${_var.clr_dark};
 
   @media ${_var.device.tablet_max} {
     grid-template-columns: 1fr;
@@ -88,10 +88,10 @@ export default function Grid({ posts }) {
       },
       {
         root: null,
-        rootMargin: '0px',
+        rootMargin: "0px",
         // Generate thresholds from 0 to 1 at 0.01 intervals
         threshold: Array.from({ length: 100 }, (_, i) => i / 100),
-      },
+      }
     );
 
     const currentPlaceholders = placeholdersRef.current;
@@ -107,7 +107,7 @@ export default function Grid({ posts }) {
   }, [posts]);
 
   return (
-    <Container>
+    <Container id="grid">
       {posts?.map((post, index) => {
         return (
           <Placeholder

@@ -1,5 +1,8 @@
 // COLORS
 //
+export const clr_light = "#D2D1CB";
+export const clr_dark = "#191718";
+
 export const primary_000 = "#171717";
 export const primary_010 = "#2e2e2e";
 export const primary_020 = "#454545";
@@ -12,9 +15,7 @@ export const primary_080 = "#d1d1d1";
 export const primary_090 = "#e8e8e8";
 export const primary_100 = "#ffffff";
 
-export const danger = "#FF6F59";
-export const success100 = "#248232";
-export const success200 = "#2BA84A";
+export const clr_danger = "#f34213";
 
 // MEDIA QUERIES
 //
@@ -57,6 +58,9 @@ export const spaceL = "64px";
 export const spaceXL = "128px";
 
 export const headerHeight = "64px";
+
+export const rootMargin = "0px 100% 0px 0px";
+export const threshold = 0;
 
 // ANIMATION STYLES
 export const cubicBezier = "cubic-bezier(0.79, 0.14, 0.15, 0.86)";

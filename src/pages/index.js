@@ -1,20 +1,17 @@
-import client from '@/lib/sanityClient';
+import client from "@/lib/sanityClient";
+import * as _var from "../styles/variables";
 
-import Hero from '@/components/Hero';
-import Grid from '@/components/Grid';
-
-import * as _var from '../styles/variables';
+import Hero from "@/components/sections/Hero";
+import Capitalism from "@/components/sections/Capitalism";
+import Space from "@/components/sections/Space";
+import Grid from "@/components/sections/Grid";
 
 export default function Home({ posts }) {
-  const featuredPosts = posts.filter(
-    (post) =>
-      post.categories &&
-      post.categories.some((category) => category.title === 'featured'),
-  );
-
   return (
     <>
-      <Hero posts={featuredPosts} duration={10000} />
+      <Hero />
+      <Capitalism />
+      <Space />
       <Grid posts={posts} />
     </>
   );
