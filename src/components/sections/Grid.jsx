@@ -23,7 +23,7 @@ const Container = styled.section`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  background: ${_var.clr_light};
+  background: ${_var.clr_dark};
 
   @media ${_var.device.tablet_max} {
     grid-template-columns: 1fr;

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
@@ -64,19 +65,33 @@ const Ul = styled.ul`
 `;
 
 const Header = () => {
+  const [currentPathname, setCurrentPathname] = useState("/");
+
   const router = useRouter();
   const pathname = router.asPath;
+
+  useEffect(() => {
+    setCurrentPathname(pathname);
+  }, [pathname]);
 
   return (
     <Container id="#top">
       <Wrapper>
         <Link href="/">Davorama</Link>
-        <Ul className={pathname !== "/" ? "active" : ""}>
+        <Ul className={currentPathname !== "/" ? "active" : ""}>
           <li>
             <Link href="/">music</Link>
           </li>
           <li>
-            <Link href="/#grid">visuals</Link>
+            <Link
+              href="/#grid"
+              style={{
+                textDecoration:
+                  currentPathname === "/#grid" ? "underline" : "none",
+              }}
+            >
+              visuals
+            </Link>
           </li>
           <li>
             <Link href="/">

@@ -58,6 +58,22 @@ const SpaceTimeContainer = styled.div`
       top: 0;
       left: 0;
     }
+
+    & p:nth-child(2) {
+      z-index: 10;
+    }
+    & p:nth-child(2) {
+      color: hsl(0, 0%, 20%);
+      z-index: 9;
+    }
+    & p:nth-child(3) {
+      color: hsl(0, 0%, 40%);
+      z-index: 8;
+    }
+    & p:nth-child(4) {
+      color: hsl(0, 0%, 60%);
+      z-index: 7;
+    }
   }
 
   & .leftPanel {
