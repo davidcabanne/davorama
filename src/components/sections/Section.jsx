@@ -8,23 +8,11 @@ export const Section = styled.section`
   justify-content: center;
   align-items: center;
   padding: ${_var.spaceXL} ${_var.spaceS};
-    overflow-x: hidden;
+  overflow: hidden;
 
   @media ${_var.device.tablet_max} {
     padding: ${_var.spaceL} ${_var.spaceS};
   }
-
-  ${(props) =>
-    props.$capitalism &&
-    css`
-      padding: ${_var.spaceXL} ${_var.spaceS} 10% ${_var.spaceS};
-      margin-bottom: ${_var.spaceXL};
-
-      @media ${_var.device.tablet_max} {
-        padding: ${_var.spaceXL} ${_var.spaceS};
-        margin-bottom: ${_var.spaceL};
-      }
-    `}
 `;
 
 export const Wrapper = styled.div`

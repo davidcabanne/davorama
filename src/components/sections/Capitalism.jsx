@@ -6,11 +6,19 @@ import useWindowWidth from "../../../hooks/useWindowWidth";
 
 import { Section, Wrapper } from "./Section";
 
+const Container = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const CapitalismContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
 
   & p {
@@ -72,15 +80,29 @@ const Title = styled.p`
 
 const Works = () => {
   const containerRef = useRef(null);
-  const [margin, setMargin] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
 
   const innerWidth = useWindowWidth();
 
   useEffect(() => {
     if (containerRef?.current) {
       const containerWidth =
-        containerRef?.current.getBoundingClientRect().width;
-      setMargin(containerWidth / 6);
+        containerRef?.current.children[0].getBoundingClientRect().width;
+
+      const containerHeight =
+        containerRef?.current.children[0].getBoundingClientRect().height;
+
+      const paragraphAmount = 11;
+      const paragraphHeight =
+        containerRef?.current.children[0].children[0].getBoundingClientRect()
+          .height;
+
+      const totalHeight = containerHeight + paragraphHeight * paragraphAmount;
+      const totalWidth = containerWidth + containerWidth * 0.33;
+
+      setHeight(totalHeight);
+      setWidth(totalWidth);
     }
   }, [innerWidth, containerRef]);
 
@@ -104,20 +126,17 @@ const Works = () => {
   };
 
   return (
-    <Section $capitalism>
+    <Section>
       <Wrapper>
-        <TitlePanel
-          style={{
-            transform: `translateX(-${margin}px) translateY(-${margin}px)`,
-          }}
-        >
+        <TitlePanel>
           <Title>Live life love laugh</Title>
           <Title className="subtitle">Die death hate rage</Title>
         </TitlePanel>
         <CapitalismContainer
           ref={containerRef}
           style={{
-            transform: `translateX(-${margin}px) translateY(-${margin}px)`,
+            height: height,
+            width: width,
           }}
         >
           {handleRenderParagraphs(25, "Capitalism")}
