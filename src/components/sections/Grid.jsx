@@ -66,7 +66,6 @@ const Filter = styled.div`
 `;
 
 export default function Grid({ posts }) {
-  // Initialize with 0% visible
   const [visible, setVisible] = useState(new Array(posts.length).fill(0));
   const placeholdersRef = useRef(new Array(posts.length).fill(null));
 

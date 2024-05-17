@@ -4,6 +4,7 @@ import * as _var from "../styles/variables";
 import Hero from "@/components/sections/Hero";
 import Capitalism from "@/components/sections/Capitalism";
 import Space from "@/components/sections/Space";
+import Brutality from "@/components/sections/Brutality";
 import Grid from "@/components/sections/Grid";
 
 export default function Home({ posts }) {
@@ -12,6 +13,7 @@ export default function Home({ posts }) {
       <Hero />
       <Capitalism />
       <Space />
+      <Brutality />
       <Grid posts={posts} />
     </>
   );

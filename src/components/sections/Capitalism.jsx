@@ -6,14 +6,6 @@ import useWindowWidth from "../../../hooks/useWindowWidth";
 
 import { Section, Wrapper } from "./Section";
 
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CapitalismContainer = styled.div`
   position: relative;
   display: flex;

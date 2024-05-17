@@ -4,6 +4,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import * as _var from "../styles/variables";
 
+import Logo from "./Logo";
 import IconPrevious from "./icons/IconPrevious";
 
 const Container = styled.header`
@@ -29,7 +30,7 @@ const Wrapper = styled.nav`
   height: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: ${_var.spaceS};
 `;
 
@@ -77,7 +78,9 @@ const Header = () => {
   return (
     <Container id="#top">
       <Wrapper>
-        <Link href="/">Davorama</Link>
+        <Link href="/">
+          <Logo />
+        </Link>
         <Ul className={currentPathname !== "/" ? "active" : ""}>
           <li>
             <Link href="/">music</Link>
