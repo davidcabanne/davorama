@@ -11,8 +11,6 @@ const Container = styled.section`
   align-items: center;
   z-index: 0;
 
-  cursor: pointer;
-
   & video {
     position: absolute;
     width: 100%;
@@ -55,32 +53,19 @@ const Text = styled.div`
 
 const PoliceBrutality = () => {
   const videoRef = useRef(null);
-  const [play, setPlay] = useState(false);
 
   useEffect(() => {
     if (videoRef.current) {
-      if (play) {
-        videoRef.current.play().catch((error) => {
-          console.error("Error attempting to play:", error);
-        });
-      } else {
-        videoRef.current.pause();
-      }
+      videoRef.current.play();
     }
-  }, [play, videoRef]);
+  }, [videoRef]);
 
   return (
     <Container>
       <Text>
         <p>The Thin Blue Lie</p>
       </Text>
-      <video
-        ref={videoRef}
-        onClick={() => {
-          setPlay((prevPlay) => !prevPlay);
-        }}
-        loop
-      >
+      <video ref={videoRef} autoPlay muted loop>
         <source src="videos/brutality.mp4" type="video/mp4" />
       </video>
     </Container>
