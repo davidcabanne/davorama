@@ -11,21 +11,10 @@ import capitalismImage from "../../../public/images/capitalism/capitalism.jpg";
 const StyledSection = styled(Section)`
   position: relative;
   height: 100vh;
+  background: white;
 
   & > div {
     z-index: 1;
-    width: auto;
-    background: white;
-    padding: 0px ${_var.spaceL};
-    box-shadow: ${_var.cardShadowXLarge};
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: #fd0317;
-    mix-blend-mode: soft-light;
   }
 `;
 
@@ -165,13 +154,13 @@ const Capitalism = () => {
           {handleRenderParagraphs(25, "Socialism")}
         </CapitalismContainer>
       </Wrapper>
-      <StyledImage
+      {/* <StyledImage
         src={capitalismImage}
         alt="Live, life, love, laugh, capitalism"
         placeholder="blur"
         fill={true}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      />
+      /> */}
     </StyledSection>
   );
 };
