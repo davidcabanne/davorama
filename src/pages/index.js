@@ -4,6 +4,7 @@ import Hero from "@/components/sections/Hero";
 import Grid from "@/components/home/Grid";
 
 import defaultImage from "../../public/images/categories/default.jpg";
+import london2024 from "../../public/images/categories/london2024.jpg";
 import capitalism from "../../public/images/categories/capitalism.png";
 import universeSimulation from "../../public/images/categories/universeSimulation.jpg";
 import theThinBlueLie from "../../public/images/categories/theThinBlueLie.jpg";
@@ -14,6 +15,11 @@ import neouvielle2022 from "../../public/images/categories/neouvielle2022.jpg";
 import summer2022 from "../../public/images/categories/summer2022.jpg";
 
 const staticPosts = [
+  {
+    slug: "london-2024",
+    title: "London 2024",
+    href: london2024,
+  },
   {
     slug: "moving-through-space-and-time",
     title: "Moving through space and time",
