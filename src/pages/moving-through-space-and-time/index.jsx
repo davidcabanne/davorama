@@ -52,7 +52,6 @@ const SpaceTimeContainer = styled.div`
     font-weight: 500;
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    filter: blur(1.5px);
   }
 
   & div {
@@ -76,18 +75,22 @@ const SpaceTimeContainer = styled.div`
     }
     & p:nth-child(1) {
       opacity: 1;
+      filter: blur(1px);
       z-index: 9;
     }
     & p:nth-child(2) {
-      opacity: 0.4;
+      opacity: 0.6;
+      filter: blur(1px);
       z-index: 9;
     }
     & p:nth-child(3) {
-      opacity: 0.3;
+      opacity: 0.5;
+      filter: blur(2px);
       z-index: 8;
     }
     & p:nth-child(4) {
-      opacity: 0.1;
+      opacity: 0.4;
+      filter: blur(2px);
       z-index: 7;
     }
   }
@@ -105,6 +108,8 @@ const SpaceTimeContainer = styled.div`
 const Paragraph = styled.p`
   position: relative;
   z-index: 1;
+  transform: ${(props) => `translateX(${props.$translate.translate})
+    scale(${props.$translate.scale})`};
 `;
 
 const Space = () => {
@@ -116,6 +121,21 @@ const Space = () => {
       videoRef.current.play();
     }
   }, [videoRef]);
+
+  const base = 16;
+  const scale = 0.1;
+
+  const handleTranslate = (amount, side, ratio) => {
+    const ratioAmount = ratio / 1.05;
+    return {
+      translate:
+        side === "left"
+          ? `-${(base * amount * 0.75) / ratioAmount}px`
+          : `${(base * amount * 0.75) / ratioAmount}px`,
+      scale: `${1 - scale * amount}`,
+      delay: amount,
+    };
+  };
 
   return (
     <StyledSection>
@@ -140,52 +160,122 @@ const Space = () => {
         </p>
         <SpaceTimeContainer>
           <div className="leftPanel">
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
+            <Paragraph
+              $translate={handleTranslate(1, "left", 1)}
+              style={{ opacity: 1 }}
+            >
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "left", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "left", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "left", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
           </div>
           <div className="leftPanel">
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "left", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "left", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "left", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "left", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
           </div>
           <div className="leftPanel">
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "left", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "left", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "left", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "left", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
           </div>
           <div className="leftPanel">
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "left", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "left", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "left", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "left", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
           </div>
           <div className="rightPanel">
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
-            <Paragraph>MOVING THROUGH TIME</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "right", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "right", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "right", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "right", 4)}>
+              MOVING THROUGH TIME
+            </Paragraph>
           </div>
           <div className="rightPanel">
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "right", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "right", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "right", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "right", 3)}>
+              MOVING THROUGH SPACE
+            </Paragraph>
           </div>
           <div className="rightPanel">
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND</Paragraph>
+            <Paragraph $translate={handleTranslate(1, "right", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "right", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "right", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "right", 2)}>
+              MOVING THROUGH SPACE AND
+            </Paragraph>
           </div>
           <div className="rightPanel">
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
-            <Paragraph>MOVING THROUGH SPACE AND TIME</Paragraph>
+            <Paragraph
+              $translate={handleTranslate(1, "right", 1)}
+              style={{ opacity: 1 }}
+            >
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(2, "right", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(3, "right", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
+            <Paragraph $translate={handleTranslate(4, "right", 1)}>
+              MOVING THROUGH SPACE AND TIME
+            </Paragraph>
           </div>
         </SpaceTimeContainer>
       </StyledWrapper>

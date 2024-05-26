@@ -12,6 +12,7 @@ const Container = styled.div`
     font-family: "Courier New";
     font-size: 10px;
     font-weight: 800;
+    user-select: none;
   }
 
   span {

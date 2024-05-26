@@ -1,7 +1,7 @@
 import * as _var from "../styles/variables";
 
 import Hero from "@/components/sections/Hero";
-import GridHome from "@/components/sections/GridHome";
+import Grid from "@/components/home/Grid";
 
 import defaultImage from "../../public/images/categories/default.jpg";
 import capitalism from "../../public/images/categories/capitalism.png";
@@ -20,7 +20,7 @@ const staticPosts = [
     href: universeSimulation,
   },
   {
-    slug: "venezia",
+    slug: "venezia-2023",
     title: "Venezia 2023",
     href: venezia,
   },
@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <GridHome posts={staticPosts} />
+      <Grid posts={staticPosts} />
     </>
   );
 }

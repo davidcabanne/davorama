@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import * as _var from "../../styles/variables";
@@ -7,6 +8,11 @@ const Placeholder = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.25;
+  }
 `;
 
 const Svg = styled.svg`
@@ -32,10 +38,23 @@ const Svg = styled.svg`
 `;
 
 const IconPrevious = ({ theme }) => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const router = useRouter();
 
+  useEffect(() => {
+    if (router.pathname === "/") {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [router.pathname]);
+
   return (
-    <Placeholder onClick={() => router.back()}>
+    <Placeholder
+      onClick={() => !isDisabled && router.back()}
+      disabled={isDisabled}
+    >
       <Svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 18 15"
