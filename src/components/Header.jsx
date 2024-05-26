@@ -37,69 +37,29 @@ const Wrapper = styled.nav`
 const Ul = styled.ul`
   display: flex;
   gap: ${_var.spaceS};
-  transform: translateX(16px);
-  transition: 200ms ${_var.cubicBezier};
-  transition-property: transform;
-  will-change: transform;
-
-  & li {
-    & :last-child {
-      width: 0px;
-      margin-left: 0px;
-      overflow: hidden;
-      transition: 200ms ${_var.cubicBezier};
-      transition-property: width;
-      will-change: width;
-    }
-  }
-
-  &.active {
-    transform: translateX(-16px);
-
-    & li {
-      & :last-child {
-        width: 14px;
-        overflow: visible;
-      }
-    }
-  }
 `;
 
 const Header = () => {
-  const [currentPathname, setCurrentPathname] = useState("/");
+  const [theme, setTheme] = useState("light");
 
   const router = useRouter();
   const pathname = router.asPath;
 
   useEffect(() => {
-    setCurrentPathname(pathname);
+    pathname === "/moving-through-space-and-time"
+      ? setTheme("dark")
+      : setTheme("light");
   }, [pathname]);
 
   return (
     <Container id="#top">
       <Wrapper>
         <Link href="/">
-          <Logo />
+          <Logo theme={theme} />
         </Link>
-        <Ul className={currentPathname !== "/" ? "active" : ""}>
+        <Ul>
           <li>
-            <Link href="/">music</Link>
-          </li>
-          <li>
-            <Link
-              href="/#grid"
-              style={{
-                textDecoration:
-                  currentPathname === "/#grid" ? "underline" : "none",
-              }}
-            >
-              visuals
-            </Link>
-          </li>
-          <li>
-            <Link href="/">
-              <IconPrevious />
-            </Link>
+            <IconPrevious theme={theme} />
           </li>
         </Ul>
       </Wrapper>

@@ -4,12 +4,13 @@ import styled from "styled-components";
 
 import * as _var from "../../styles/variables";
 
-import heroImg from "../../../public/images/hero_comp.jpg";
+import heroImg from "../../../public/images/hero/heroEye.jpg";
 
 const Container = styled.section`
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100svh;
   display: flex;
   justify-content: center;
   align-items: center;

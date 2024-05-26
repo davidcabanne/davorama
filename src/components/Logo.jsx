@@ -1,4 +1,4 @@
-import { clr_light } from "@/styles/variables";
+import * as _var from "../styles/variables";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -17,11 +17,18 @@ const Container = styled.div`
   span {
     opacity: 0;
   }
+
+  &.light {
+    color: ${_var.clr_dark};
+  }
+  &.dark {
+    color: ${_var.clr_light};
+  }
 `;
 
-const Logo = () => {
+const Logo = ({ theme }) => {
   return (
-    <Container>
+    <Container className={theme === "dark" ? "dark" : "light"}>
       <p>___</p>
       <p>&#47;&#47;&#47;&#92;&#92;</p>
       <p>
