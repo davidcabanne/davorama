@@ -7,7 +7,7 @@ export default function Nevache2023({ posts }) {
 
 export async function getStaticProps() {
   const query = `
-  *[_type == "post" && "nevache-2023" in categories[]->title] | order(publishedAt desc) {
+  *[_type == "post" && "nevache-2023" in categories[]->title] | order(publishedAt asc) {
       'id': _id,
       slug,
       title,

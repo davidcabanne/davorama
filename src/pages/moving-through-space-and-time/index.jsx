@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as _var from "../../styles/variables";
 
 import { Section, Wrapper } from "../../components/sections/Section";
-
-const transitionOption = `500ms ${_var.cubicBezier}`;
 
 const StyledSection = styled(Section)`
   position: relative;
@@ -19,11 +17,22 @@ const StyledSection = styled(Section)`
   }
 `;
 
+const fadeIn = keyframes`
+0% {
+opacity: 0;
+}
+100% {
+opacity: 1;
+}
+`;
+
 const StyledWrapper = styled(Wrapper)`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: ${_var.spaceM};
+  opacity: 0;
+  animation: ${fadeIn} 1000ms linear forwards;
 `;
 
 const Video = styled.video`
@@ -43,8 +52,6 @@ const SpaceTimeContainer = styled.div`
   justify-content: center;
   align-items: flex-end;
   gap: 18px;
-  transition: ${transitionOption};
-  transition-property: gap;
 
   & p {
     color: ${_var.clr_light};
@@ -61,9 +68,6 @@ const SpaceTimeContainer = styled.div`
 
   & .leftPanel,
   .rightPanel {
-    transition: ${transitionOption};
-    transition-property: transform;
-
     & p:not(:nth-child(1)) {
       position: absolute;
       top: 0;
@@ -117,6 +121,7 @@ const Space = () => {
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.currentTime = 11.5;
       videoRef.current.playbackRate = 0.5;
       videoRef.current.play();
     }
@@ -160,10 +165,7 @@ const Space = () => {
         </p>
         <SpaceTimeContainer>
           <div className="leftPanel">
-            <Paragraph
-              $translate={handleTranslate(1, "left", 1)}
-              style={{ opacity: 1 }}
-            >
+            <Paragraph $translate={handleTranslate(1, "left", 1)}>
               MOVING THROUGH SPACE AND TIME
             </Paragraph>
             <Paragraph $translate={handleTranslate(2, "left", 1)}>
@@ -261,10 +263,7 @@ const Space = () => {
             </Paragraph>
           </div>
           <div className="rightPanel">
-            <Paragraph
-              $translate={handleTranslate(1, "right", 1)}
-              style={{ opacity: 1 }}
-            >
+            <Paragraph $translate={handleTranslate(1, "right", 1)}>
               MOVING THROUGH SPACE AND TIME
             </Paragraph>
             <Paragraph $translate={handleTranslate(2, "right", 1)}>

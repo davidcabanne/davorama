@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import styled from "styled-components";
 import * as _var from "../../styles/variables";
 
 import useWindowWidth from "../../../hooks/useWindowWidth";
 
 import { Section, Wrapper } from "../../components/sections/Section";
+import capitalismImage from "../../../public/images/capitalism/capitalism.jpg";
 
 const StyledSection = styled(Section)`
   height: 100vh;
+
+  & > div {
+    z-index: 1;
+  }
 `;
 
 const CapitalismContainer = styled.div`
@@ -74,6 +80,12 @@ const Title = styled.p`
   }
 `;
 
+const StyledImage = styled(Image)`
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+`;
+
 const Capitalism = () => {
   const containerRef = useRef(null);
   const [height, setHeight] = useState(0);
@@ -124,7 +136,7 @@ const Capitalism = () => {
   return (
     <StyledSection>
       <Wrapper>
-        <TitlePanel style={{marginLeft: `-${width / 5}px`}}>
+        <TitlePanel style={{ marginLeft: `-${width / 5}px` }}>
           <Title>Live life love laugh</Title>
           <Title className="subtitle">Die death hate rage</Title>
         </TitlePanel>
@@ -139,6 +151,13 @@ const Capitalism = () => {
           {handleRenderParagraphs(25, "Socialism")}
         </CapitalismContainer>
       </Wrapper>
+      <StyledImage
+        src={capitalismImage}
+        alt="Live, life, love, laugh, capitalism"
+        placeholder="blur"
+        fill={true}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
     </StyledSection>
   );
 };

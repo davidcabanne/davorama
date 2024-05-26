@@ -69,9 +69,8 @@ export default function GridHome({ posts }) {
             <Image
               src={post?.href}
               alt={post?.title}
-              // placeholder="blur"
+              placeholder="blur"
               fill={true}
-              // blurDataURL={post?.mainImage.asset.metadata.lqip}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </Placeholder>
