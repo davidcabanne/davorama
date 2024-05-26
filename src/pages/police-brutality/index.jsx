@@ -65,7 +65,7 @@ const PoliceBrutality = () => {
       <Text>
         <p>The Thin Blue Lie</p>
       </Text>
-      <video ref={videoRef} autoPlay muted loop>
+      <video ref={videoRef} playsInline autoPlay muted loop>
         <source src="videos/brutality.mp4" type="video/mp4" />
       </video>
     </Container>

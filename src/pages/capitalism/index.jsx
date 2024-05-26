@@ -9,10 +9,23 @@ import { Section, Wrapper } from "../../components/sections/Section";
 import capitalismImage from "../../../public/images/capitalism/capitalism.jpg";
 
 const StyledSection = styled(Section)`
+  position: relative;
   height: 100vh;
 
   & > div {
     z-index: 1;
+    width: auto;
+    background: white;
+    padding: 0px ${_var.spaceL};
+    box-shadow: ${_var.cardShadowXLarge};
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #fd0317;
+    mix-blend-mode: soft-light;
   }
 `;
 
@@ -84,6 +97,7 @@ const StyledImage = styled(Image)`
   position: absolute;
   inset: 0;
   object-fit: cover;
+  user-select: none;
 `;
 
 const Capitalism = () => {
@@ -136,7 +150,7 @@ const Capitalism = () => {
   return (
     <StyledSection>
       <Wrapper>
-        <TitlePanel style={{ marginLeft: `-${width / 5}px` }}>
+        <TitlePanel>
           <Title>Live life love laugh</Title>
           <Title className="subtitle">Die death hate rage</Title>
         </TitlePanel>

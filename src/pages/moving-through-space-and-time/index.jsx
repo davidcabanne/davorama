@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import * as _var from "../../styles/variables";
 
 import { Section, Wrapper } from "../../components/sections/Section";
@@ -17,22 +17,17 @@ const StyledSection = styled(Section)`
   }
 `;
 
-const fadeIn = keyframes`
-0% {
-opacity: 0;
-}
-100% {
-opacity: 1;
-}
-`;
-
 const StyledWrapper = styled(Wrapper)`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: ${_var.spaceM};
   opacity: 0;
-  animation: ${fadeIn} 1000ms linear forwards;
+  transition: opacity 500ms ${_var.cubicBezier};
+
+  &.active {
+    opacity: 1;
+  }
 `;
 
 const Video = styled.video`
@@ -118,13 +113,31 @@ const Paragraph = styled.p`
 
 const Space = () => {
   const videoRef = useRef(null);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 11.5;
-      videoRef.current.playbackRate = 0.5;
-      videoRef.current.play();
+    const handleLoadedMetadata = () => {
+      setIsVideoReady(true);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 11.5;
+        videoRef.current.playbackRate = 0.5;
+        videoRef.current.play();
+      }
+    };
+
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
     }
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
+      }
+    };
   }, [videoRef]);
 
   const base = 16;
@@ -144,10 +157,10 @@ const Space = () => {
 
   return (
     <StyledSection>
-      <Video ref={videoRef} autoPlay muted loop>
+      <Video ref={videoRef} playsInline autoPlay muted loop>
         <source src="videos/universeSimulation.webm" type="video/webm" />
       </Video>
-      <StyledWrapper>
+      <StyledWrapper className={isVideoReady ? "active" : ""}>
         <p
           style={{
             textAlign: "center",
