@@ -124,7 +124,7 @@ const Capitalism = () => {
   return (
     <StyledSection>
       <Wrapper>
-        <TitlePanel>
+        <TitlePanel style={{marginLeft: `-${width / 5}px`}}>
           <Title>Live life love laugh</Title>
           <Title className="subtitle">Die death hate rage</Title>
         </TitlePanel>
