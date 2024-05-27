@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import * as _var from "../../styles/variables";
+
+import videoPoster from "../../../public/videos/brutalityPoster.jpg";
 
 const Container = styled.section`
   position: relative;
@@ -65,7 +67,14 @@ const PoliceBrutality = () => {
       <Text>
         <p>The Thin Blue Lie</p>
       </Text>
-      <video ref={videoRef} playsInline autoPlay muted loop>
+      <video
+        ref={videoRef}
+        playsInline
+        autoPlay
+        muted
+        loop
+        poster={videoPoster}
+      >
         <source src="videos/brutality.mp4" type="video/mp4" />
       </video>
     </Container>
