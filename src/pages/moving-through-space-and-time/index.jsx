@@ -40,6 +40,10 @@ const Video = styled.video`
   pointer-events: none;
   mix-blend-mode: multiply;
   z-index: 2;
+
+  @media ${_var.device.desktop_max} {
+transform: scale(2);
+  }
 `;
 
 const SpaceTimeContainer = styled.div`
@@ -54,6 +58,10 @@ const SpaceTimeContainer = styled.div`
     font-weight: 500;
     writing-mode: vertical-rl;
     text-orientation: mixed;
+
+    @media ${_var.device.tablet_max} {
+      font-size: clamp(12px, 4vw, 24px);
+    }
   }
 
   & div {

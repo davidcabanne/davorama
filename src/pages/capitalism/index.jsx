@@ -6,7 +6,6 @@ import * as _var from "../../styles/variables";
 import useWindowWidth from "../../../hooks/useWindowWidth";
 
 import { Section, Wrapper } from "../../components/sections/Section";
-import capitalismImage from "../../../public/images/capitalism/capitalism.jpg";
 
 const StyledSection = styled(Section)`
   position: relative;
@@ -82,13 +81,6 @@ const Title = styled.p`
   }
 `;
 
-const StyledImage = styled(Image)`
-  position: absolute;
-  inset: 0;
-  object-fit: cover;
-  user-select: none;
-`;
-
 const Capitalism = () => {
   const containerRef = useRef(null);
   const [height, setHeight] = useState(0);
@@ -154,13 +146,6 @@ const Capitalism = () => {
           {handleRenderParagraphs(25, "Socialism")}
         </CapitalismContainer>
       </Wrapper>
-      {/* <StyledImage
-        src={capitalismImage}
-        alt="Live, life, love, laugh, capitalism"
-        placeholder="blur"
-        fill={true}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      /> */}
     </StyledSection>
   );
 };
