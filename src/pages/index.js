@@ -1,6 +1,6 @@
 import * as _var from "../styles/variables";
 
-import Hero from "@/components/sections/Hero";
+import Hero from "@/components/Hero";
 import Grid from "@/components/home/Grid";
 
 import defaultImage from "../../public/images/categories/default.jpg";
@@ -13,6 +13,7 @@ import breche2023 from "../../public/images/categories/breche2023.jpg";
 import nevache2023 from "../../public/images/categories/nevache2023.jpg";
 import neouvielle2022 from "../../public/images/categories/neouvielle2022.jpg";
 import summer2022 from "../../public/images/categories/summer2022.jpg";
+import twoBodiesColliding from "../../public/images/categories/twoBodiesColliding.png";
 
 const staticPosts = [
   {
@@ -64,6 +65,11 @@ const staticPosts = [
     slug: "all-films",
     title: "All films",
     href: defaultImage,
+  },
+  {
+    slug: "two-bodies-colliding",
+    title: "Two bodies colliding",
+    href: twoBodiesColliding,
   },
 ];
 

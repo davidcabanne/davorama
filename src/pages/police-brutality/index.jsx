@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import * as _var from "../../styles/variables";
 
@@ -18,13 +18,7 @@ const Container = styled.section`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(1);
     z-index: 1;
-    transition: filter 200ms ${_var.cubicBezier};
-
-    &:hover {
-      filter: grayscale(0);
-    }
   }
 `;
 
@@ -54,27 +48,12 @@ const Text = styled.div`
 `;
 
 const PoliceBrutality = () => {
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play();
-    }
-  }, [videoRef]);
-
   return (
     <Container>
       <Text>
         <p>The Thin Blue Lie</p>
       </Text>
-      <video
-        ref={videoRef}
-        playsInline
-        autoPlay
-        muted
-        loop
-        poster={videoPoster}
-      >
+      <video playsInline autoPlay muted loop poster={videoPoster}>
         <source src="videos/brutality.mp4" type="video/mp4" />
       </video>
     </Container>
