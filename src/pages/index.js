@@ -14,8 +14,14 @@ import nevache2023 from "../../public/images/categories/nevache2023.jpg";
 import neouvielle2022 from "../../public/images/categories/neouvielle2022.jpg";
 import summer2022 from "../../public/images/categories/summer2022.jpg";
 import twoBodiesColliding from "../../public/images/categories/twoBodiesColliding.png";
+import electricity from "../../public/images/categories/electricity.jpg";
 
 const staticPosts = [
+  {
+    slug: "electricity",
+    title: "electricity",
+    href: electricity,
+  },
   {
     slug: "london-2024",
     title: "London 2024",
