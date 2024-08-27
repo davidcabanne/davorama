@@ -13,6 +13,7 @@
     "@sanity/client": "^6.15.13",
     "@sanity/image-url": "^1.0.2",
     "blurhash": "^2.0.5",
+    "face-api.js": "^0.22.2",
     "groq": "^3.37.2",
     "next": "14.2.1",
     "react": "^18",
