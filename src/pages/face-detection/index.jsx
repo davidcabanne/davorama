@@ -4,7 +4,7 @@ import * as faceapi from "face-api.js";
 import styled from "styled-components";
 
 import { Section } from "@/components/sections/Section";
-import { slowMovement, erraticMovement } from "./keyframes";
+import { slowMovement, erraticMovement } from "../../components/utils/keyframes";
 
 import twinPeaksRoom from "../../../public/images/face-detection/twinPeaksRoom.jpg";
 import twinPeaksRoomActive from "../../../public/images/face-detection/twinPeaksRoomActive.jpg";
