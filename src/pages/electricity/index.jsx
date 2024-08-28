@@ -241,7 +241,7 @@ const Electricity = () => {
         </video>
 
         {/* AUDIO */}
-        <audio ref={audioPlayerRef} controls src="./radioWaves.mp3"></audio>
+        <audio ref={audioPlayerRef} controls src="./audios/radioWaves.mp3"></audio>
 
         {/* SUBTITLES */}
         <Subtitle

@@ -15,13 +15,19 @@ import neouvielle2022 from "../../public/images/categories/neouvielle2022.jpg";
 import summer2022 from "../../public/images/categories/summer2022.jpg";
 import twoBodiesColliding from "../../public/images/categories/twoBodiesColliding.png";
 import electricity from "../../public/images/categories/electricity.jpg";
-import faceDetection from "../../public/images/categories/faceDetection.jpg";
+import glassBox from "../../public/images/categories/glassBox.jpg";
+import temporalDrift from "../../public/images/categories/temporalDrift.jpg";
 
 const staticPosts = [
   {
-    slug: "face-detection",
-    title: "face-detection",
-    href: faceDetection,
+    slug: "temporal-drift",
+    title: "Temporal Drift",
+    href: temporalDrift,
+  },
+  {
+    slug: "glass-box",
+    title: "Glass box",
+    href: glassBox,
   },
   {
     slug: "electricity",
