@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import * as variables from "../../styles/variables";
+import * as _var from "../../styles/variables";
 
 const Container = styled.div`
   position: relative;
@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px ${variables.spaceL};
+  padding: 0px ${_var.spaceL};
 `;
 
 const Wrapper = styled.div`
@@ -122,74 +122,58 @@ const TemporalDrift = () => {
     }
   }, [isPlaying]);
 
-  const handlePlay = (event) => {
+  const handlePlay = () => {
     setIsPlaying(!isPlaying);
   };
 
-  const handleHover = (event) => {
+  const handleEnter = () => {
     firstRef.current.playbackRate = 1.0 - 0.7;
     secondRef.current.playbackRate = 1 + delay - 0.7;
     thirdRef.current.playbackRate = 1 - delay - 0.7;
   };
 
-  const handleLeave = (event) => {
+  const handleLeave = () => {
     firstRef.current.playbackRate = 1;
     secondRef.current.playbackRate = 1 + delay;
     thirdRef.current.playbackRate = 1 - delay;
   };
 
-  const handleAudioContext = (event) => {
-    let ctx = new AudioContext();
-  };
-
   return (
-    <>
-      <Container
-        onClick={(event) => {
-          handleAudioContext(event);
-        }}
+    <Container>
+      <Wrapper
+        onClick={handlePlay}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
       >
-        <Wrapper
-          onClick={(event) => {
-            handlePlay(event);
-          }}
-          onMouseEnter={(event) => {
-            handleHover(event);
-          }}
-          onMouseLeave={(event) => {
-            handleLeave(event);
-          }}
-        >
-          <Video
-            ref={firstRef}
-            src="/videos/temporalDrift.mp4"
-            autoPlay
-            loop
-            playsInline
-            controls=""
-            style={{ mixBlendMode: "overlay" }}
-          />
-          <Video
-            ref={secondRef}
-            src="/videos/temporalDrift.mp4"
-            autoPlay
-            loop
-            playsInline
-            controls=""
-            style={{ mixBlendMode: "overlay" }}
-          />
-          <Video
-            ref={thirdRef}
-            src="/videos/temporalDrift.mp4"
-            autoPlay
-            loop
-            playsInline
-            controls=""
-            style={{ mixBlendMode: "multiply" }}
-          />
-        </Wrapper>
-      </Container>
-    </>
+        <Video
+          ref={firstRef}
+          src="/videos/temporalDrift.mp4"
+          autoPlay
+          loop
+          playsInline
+          controls=""
+          style={{ mixBlendMode: "overlay" }}
+        />
+        <Video
+          ref={secondRef}
+          src="/videos/temporalDrift.mp4"
+          autoPlay
+          loop
+          playsInline
+          controls=""
+          style={{ mixBlendMode: "overlay" }}
+        />
+        <Video
+          ref={thirdRef}
+          src="/videos/temporalDrift.mp4"
+          autoPlay
+          loop
+          playsInline
+          controls=""
+          style={{ mixBlendMode: "multiply" }}
+        />
+      </Wrapper>
+    </Container>
   );
 };
 
