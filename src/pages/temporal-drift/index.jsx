@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import * as variables from "../../styles/variables";
 
 const Container = styled.div`
@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px ${variables.spaceLarge};
+  padding: 0px ${variables.spaceL};
 `;
 
 const Wrapper = styled.div`
@@ -29,127 +29,86 @@ const Video = styled.video`
   object-fit: cover;
   mix-blend-mode: multiply;
   filter: saturate(1);
-
-  transition: opacity 200ms ease-in-out;
-
-  &.none {
-    opacity: 0;
-  }
-
-  &.opacity {
-    opacity: 1;
-  }
-
-  &.mixBlend {
-    mix-blend-mode: difference;
-  }
-`;
-
-const fade_in = keyframes`
-0% {
-  opacity: 0;
-}
-50%{
-  opacity: 1;
-}
-100% {
-  opacity: 0;
-}
-`;
-
-const fade_out = keyframes`
-0% {
-  opacity: 1;
-}
-100% {
-  opacity: 0;
-}
-`;
-
-const Glitch = styled.video`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 10;
-  pointer-events: none;
-
-  &.active {
-    animation: ${fade_in} 300ms ${variables.animationBezier} forwards;
-  }
-  &.inactive {
-    animation: ${fade_out} 300ms ${variables.animationBezier} forwards;
-  }
 `;
 
 const TemporalDrift = () => {
-  // USE-REFs
   const firstRef = useRef(null);
   const secondRef = useRef(null);
   const thirdRef = useRef(null);
 
-  // USE-STATEs
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const delay = 0.025;
 
+  // Define a generalized time update function
+  const timeUpdate = (videoRef, start, end) => {
+    if (videoRef.current && videoRef.current.currentTime >= end) {
+      videoRef.current.currentTime = start;
+    }
+  };
+
   useEffect(() => {
+    // Store the current ref values in variables
+    const firstVideo = firstRef.current;
+    const secondVideo = secondRef.current;
+    const thirdVideo = thirdRef.current;
+
     const timecode = 0;
     const start = timecode;
     const end = timecode + 10;
 
-    if (firstRef.current && secondRef.current && thirdRef.current) {
+    if (firstVideo && secondVideo && thirdVideo) {
       // playbackRate
-      firstRef.current.playbackRate = 1;
-      secondRef.current.playbackRate = 1 + delay;
-      thirdRef.current.playbackRate = 1 - delay;
+      firstVideo.playbackRate = 1;
+      secondVideo.playbackRate = 1 + delay;
+      thirdVideo.playbackRate = 1 - delay;
 
       // volume
-      firstRef.current.volume = 0.5;
-      secondRef.current.volume = 0.5;
-      thirdRef.current.volume = 0.5;
+      firstVideo.volume = 0.5;
+      secondVideo.volume = 0.5;
+      thirdVideo.volume = 0.5;
 
-      const firstTimeUpdate = () => {
-        if (firstRef.current && firstRef.current.currentTime >= end) {
-          firstRef.current.currentTime = start;
-        }
-      };
+      // Bind the event listeners, passing the start and end values
+      firstVideo.addEventListener(
+        "timeupdate",
+        () => timeUpdate(firstRef, start, end),
+        false
+      );
+      secondVideo.addEventListener(
+        "timeupdate",
+        () => timeUpdate(secondRef, start, end),
+        false
+      );
+      thirdVideo.addEventListener(
+        "timeupdate",
+        () => timeUpdate(thirdRef, start, end),
+        false
+      );
 
-      const secondTimeUpdate = () => {
-        if (secondRef.current && secondRef.current.currentTime >= end) {
-          secondRef.current.currentTime = start;
-        }
-      };
-
-      const thirdTimeUpdate = () => {
-        if (thirdRef.current && thirdRef.current.currentTime >= end) {
-          thirdRef.current.currentTime = start;
-        }
-      };
-
-      firstRef.current.addEventListener("timeupdate", firstTimeUpdate, false);
-      secondRef.current.addEventListener("timeupdate", secondTimeUpdate, false);
-      thirdRef.current.addEventListener("timeupdate", thirdTimeUpdate, false);
-
-      firstRef.current.currentTime = start;
-      secondRef.current.currentTime = start;
-      thirdRef.current.currentTime = start;
+      firstVideo.currentTime = start;
+      secondVideo.currentTime = start;
+      thirdVideo.currentTime = start;
     }
 
     return () => {
       // Cleanup: Pause the videos and remove event listeners on unmount
-      if (firstRef.current && secondRef.current && thirdRef.current) {
-        firstRef.current.pause();
-        secondRef.current.pause();
-        thirdRef.current.pause();
+      if (firstVideo && secondVideo && thirdVideo) {
+        firstVideo.pause();
+        secondVideo.pause();
+        thirdVideo.pause();
 
-        firstRef.current.removeEventListener("timeupdate", firstTimeUpdate);
-        secondRef.current.removeEventListener("timeupdate", secondTimeUpdate);
-        thirdRef.current.removeEventListener("timeupdate", thirdTimeUpdate);
+        firstVideo.removeEventListener("timeupdate", () =>
+          timeUpdate(firstRef, start, end)
+        );
+        secondVideo.removeEventListener("timeupdate", () =>
+          timeUpdate(secondRef, start, end)
+        );
+        thirdVideo.removeEventListener("timeupdate", () =>
+          timeUpdate(thirdRef, start, end)
+        );
       }
     };
-  }, [firstRef, secondRef, thirdRef]);
+  }, [delay]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -168,14 +127,12 @@ const TemporalDrift = () => {
   };
 
   const handleHover = (event) => {
-    setIsHovered(true);
     firstRef.current.playbackRate = 1.0 - 0.7;
     secondRef.current.playbackRate = 1 + delay - 0.7;
     thirdRef.current.playbackRate = 1 - delay - 0.7;
   };
 
   const handleLeave = (event) => {
-    setIsHovered(false);
     firstRef.current.playbackRate = 1;
     secondRef.current.playbackRate = 1 + delay;
     thirdRef.current.playbackRate = 1 - delay;
