@@ -42,7 +42,7 @@ const Video = styled.video`
   z-index: 2;
 
   @media ${_var.device.desktop_max} {
-transform: scale(2);
+    transform: scale(2);
   }
 `;
 
@@ -53,7 +53,7 @@ const SpaceTimeContainer = styled.div`
   gap: 18px;
 
   & p {
-    color: ${_var.clr_light};
+    color: ${_var.primary_100};
     font-size: 24px;
     font-weight: 500;
     writing-mode: vertical-rl;
@@ -165,7 +165,7 @@ const Space = () => {
 
   return (
     <StyledSection>
-      <Video ref={videoRef} playsInline autoPlay muted loop>
+      <Video ref={videoRef} playsInline autoPlay muted loop preload="auto">
         <source src="videos/universeSimulation.webm" type="video/webm" />
       </Video>
       <StyledWrapper className={isVideoReady ? "active" : ""}>
@@ -173,7 +173,7 @@ const Space = () => {
           style={{
             textAlign: "center",
             fontFamily: "Georgia",
-            color: `${_var.clr_light}`,
+            color: `${_var.primary_100}`,
           }}
         >
           Gravity is a Lie,

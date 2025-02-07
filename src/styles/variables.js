@@ -1,7 +1,5 @@
 // COLORS
 //
-export const clr_light = "#D2D1CB";
-export const clr_dark = "#191718";
 
 export const primary_000 = "#171717";
 export const primary_010 = "#2e2e2e";
@@ -57,7 +55,7 @@ export const spaceML = "40px";
 export const spaceL = "64px";
 export const spaceXL = "128px";
 
-export const headerHeight = "64px";
+export const headerHeight = "56px";
 
 export const rootMargin = "0px 100% 0px 0px";
 export const threshold = 0;

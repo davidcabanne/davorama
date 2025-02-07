@@ -1,6 +1,8 @@
 import * as _var from "../styles/variables";
 import styled from "styled-components";
 
+const FONT_SIZE = 6;
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -10,7 +12,7 @@ const Container = styled.div`
   p,
   span {
     font-family: "Courier New";
-    font-size: 10px;
+    font-size: ${FONT_SIZE}px;
     font-weight: 800;
     user-select: none;
   }
@@ -36,7 +38,7 @@ const Logo = ({ theme }) => {
         d<span>_</span>e\e
       </p>
       <p>
-        <span>_</span>\<span style={{ fontSize: "10px" }}>__</span>-,
+        <span>_</span>\<span style={{ fontSize: `${FONT_SIZE}px` }}>__</span>-,
       </p>
     </Container>
   );

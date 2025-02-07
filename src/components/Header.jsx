@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import * as _var from "../styles/variables";
@@ -12,13 +11,14 @@ const Container = styled.header`
   top: 0;
   left: 0;
   width: 100%;
+  height: 56px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   z-index: 100;
 
   & a {
-    color: ${_var.clr_dark};
+    color: ${_var.primary_010};
     text-decoration: none;
     cursor: pointer;
   }
@@ -30,8 +30,8 @@ const Wrapper = styled.nav`
   height: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: ${_var.spaceS};
+  align-items: center;
+  padding: ${_var.spaceXS};
 `;
 
 const Ul = styled.ul`
@@ -40,26 +40,15 @@ const Ul = styled.ul`
 `;
 
 const Header = () => {
-  const [theme, setTheme] = useState("light");
-
-  const router = useRouter();
-  const pathname = router.asPath;
-
-  useEffect(() => {
-    pathname === "/moving-through-space-and-time"
-      ? setTheme("dark")
-      : setTheme("light");
-  }, [pathname]);
-
   return (
     <Container id="#top">
       <Wrapper>
         <Link href="/">
-          <Logo theme={theme} />
+          <Logo />
         </Link>
         <Ul>
           <li>
-            <IconPrevious theme={theme} />
+            <IconPrevious />
           </li>
         </Ul>
       </Wrapper>
