@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import styled from "styled-components";
 import * as _var from "@/styles/variables";
 
@@ -10,40 +10,54 @@ import glassBox from "../../public/images/categories/glassBox.jpg";
 import temporalDrift from "../../public/images/categories/temporalDrift.jpg";
 import theThinBlueLie from "../../public/images/categories/theThinBlueLie.jpg";
 
-const ROWS_AMOUNT = 20;
-const ROW_REM = 8;
-const EXPAND_PX = "10vw";
+const ROWS_AMOUNT = 20; // Total number of rows
+const ROW_REM = 8; // Number of rows per screen height
 
 const columns = ["1fr"];
 for (let i = 1; i < ROWS_AMOUNT; i++) {
   columns.push(`${(1 - i * 0.05).toFixed(2)}fr`);
 }
 
+// Symmetrical columns: decrease, then increase
 const combinedColumns = [...columns, ...columns.slice().reverse()];
-const totalColumns = combinedColumns.length;
 
 const Container = styled.div`
   padding-top: ${_var.headerHeight};
   width: 100%;
   height: calc(100vh - ${_var.headerHeight});
   display: grid;
-  grid-template-columns: ${(props) => props.$gridTemplate};
-  grid-auto-rows: calc((calc(100vh - ${_var.headerHeight})) / ${ROW_REM});
-  transition: grid-template-columns 150ms ease-in-out;
+
+  /* Dynamically adjust columns */
+  grid-template-columns: ${({ hoveredColumn }) =>
+    combinedColumns
+      .map(
+        (col, index) => (index === hoveredColumn ? "3fr" : col) // Hovered column expands
+      )
+      .join(" ")};
+
+  /* Dynamically adjust rows */
+  grid-template-rows: ${({ hoveredRow }) =>
+    Array.from({ length: ROWS_AMOUNT })
+      .map(
+        (_, index) =>
+          index === hoveredRow
+            ? `calc((100vh - ${_var.headerHeight}) / ${ROW_REM} * 2)` // Expanded row height
+            : `calc((100vh - ${_var.headerHeight}) / ${ROW_REM})` // Default row height
+      )
+      .join(" ")};
+
+  transition: grid-template-columns 100ms ease,
+    grid-template-rows 100ms ${_var.cubicBezier};
 `;
 
 const Item = styled.div`
   position: relative;
   width: 100%;
-  border: 0.25px solid ${_var.primary_010};
+  border: 1px solid ${_var.primary_090};
   background: ${(props) =>
     props.$isCategorized ? `${_var.primary_010}` : `${_var.primary_100}`};
   cursor: pointer;
   z-index: 0;
-
-  &:hover {
-    z-index: 10;
-  }
 
   & div {
     position: absolute;
@@ -65,36 +79,21 @@ const Placeholder = styled.div`
   height: 100%;
   overflow: hidden;
   background: ${_var.primary_010};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
 
-  & div:first-child {
+  & div {
     z-index: 1;
   }
-`;
-
-const ImgContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
 
   & img {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    min-width: 10vw;
     object-fit: cover;
   }
 `;
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [hoveredRow, setHoveredRow] = useState(null);
   const [hoveredColumn, setHoveredColumn] = useState(null);
 
   const categories = [
@@ -114,89 +113,58 @@ export default function Home() {
   ];
 
   const arr = Array.from(Array(ROWS_AMOUNT * (ROW_REM * 2)).keys());
+  const totalColumns = combinedColumns.length;
+
   const [randomCategoryMap, setRandomCategoryMap] = useState(new Map());
 
   useEffect(() => {
     const newCategoryMap = new Map();
     const highlightIndices = new Set();
 
-    // Calculate center column range
-    const centerStart = Math.floor(totalColumns / 2) - 2; // Adjust if needed
-    const centerEnd = Math.floor(totalColumns / 2) + 1; // 4 center columns
-
-    // Get only valid positions outside the center columns
-    const validPositions = arr.filter((index) => {
-      const column = index % totalColumns;
-      return column < centerStart || column > centerEnd;
-    });
-
-    while (
-      newCategoryMap.size < categories.length &&
-      validPositions.length > 0
-    ) {
-      const randomIndex = Math.floor(Math.random() * validPositions.length);
-      const selectedIndex = validPositions.splice(randomIndex, 1)[0];
-
-      newCategoryMap.set(selectedIndex, categories[newCategoryMap.size]);
+    while (newCategoryMap.size < categories.length) {
+      const randomIndex = Math.floor(Math.random() * arr.length);
+      if (!highlightIndices.has(randomIndex)) {
+        highlightIndices.add(randomIndex);
+        newCategoryMap.set(randomIndex, categories[newCategoryMap.size]);
+      }
     }
 
     setRandomCategoryMap(newCategoryMap);
-  }, []);
-
-  // Compute stable baseline column sizes (ensuring it always sums to 100vw)
-  const totalFr = combinedColumns.reduce(
-    (sum, val) => sum + parseFloat(val),
-    0
-  );
-  const baseColumnSizes = combinedColumns.map(
-    (size) => (parseFloat(size) / totalFr) * 100
-  ); // Convert fr to %
-
-  // Compute adjusted grid-template-columns dynamically
-  const gridTemplate = baseColumnSizes
-    .map((size, index) => {
-      if (hoveredColumn === null) {
-        return `${size}%`; // No column hovered, normal layout
-      }
-      if (index === hoveredColumn) {
-        return `calc(${size}% + ${EXPAND_PX})`; // Expand hovered column by 10vw
-      } else {
-        return `calc(${size}% - (${EXPAND_PX} / (${totalColumns} - 1)))`; // Shrink others evenly
-      }
-    })
-    .join(" ");
+  }, [arr.length]);
 
   return (
-    <Container $gridTemplate={gridTemplate}>
-      {arr.map((item) => {
-        const column = item % totalColumns;
-        const isReversed = column > columns.length;
+    <Container hoveredRow={hoveredRow} hoveredColumn={hoveredColumn}>
+      {arr.map((item, index) => {
+        const rowIndex = Math.floor(index / totalColumns);
+        const columnIndex = index % totalColumns;
         const isCategorized = randomCategoryMap.has(item);
         const category = randomCategoryMap.get(item) || "";
 
         return (
           <Item
-            key={item}
-            $isReversed={isReversed}
+            key={index}
             $isCategorized={isCategorized}
-            onClick={() => setSelectedCategory(category.type)}
-            onMouseEnter={() => setHoveredColumn(column)}
-            onMouseLeave={() => setHoveredColumn(null)}
+            onMouseEnter={() => {
+              setHoveredRow(rowIndex);
+              setHoveredColumn(columnIndex);
+            }}
+            onMouseLeave={() => {
+              setHoveredRow(null);
+              setHoveredColumn(null);
+            }}
           >
             {isCategorized ? (
               <Link href={category.link}>
                 <Placeholder>
                   <div>{category.type}</div>
-                  <ImgContainer>
-                    <Image
-                      key={category.type}
-                      src={category.img}
-                      alt={category.type}
-                      placeholder="blur"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  </ImgContainer>
+                  <Image
+                    key={category.type}
+                    src={category.img}
+                    alt={category.type}
+                    placeholder="blur"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                 </Placeholder>
               </Link>
             ) : (
