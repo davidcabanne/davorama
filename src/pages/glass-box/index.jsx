@@ -30,6 +30,12 @@ const Overlay = styled.div`
 `;
 
 const ActiveImageDouble = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   transition: 150ms opacity ease-in-out;
   animation: ${erraticMovement} 500ms infinite alternate reverse;
@@ -40,6 +46,12 @@ const ActiveImageDouble = styled(Image)`
 `;
 
 const ActiveImage = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   transition: 150ms opacity ease-in-out;
   animation: ${erraticMovement} 500ms infinite alternate;
@@ -50,6 +62,12 @@ const ActiveImage = styled(Image)`
 `;
 
 const BackgroundImage = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   animation: ${slowMovement} 120000ms infinite alternate;
 `;
 
