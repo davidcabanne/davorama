@@ -10,6 +10,9 @@ import glassBox from "../../public/images/categories/glassBox.jpg";
 import temporalDrift from "../../public/images/categories/temporalDrift.jpg";
 import theThinBlueLie from "../../public/images/categories/theThinBlueLie.jpg";
 
+import tvStatic from "../../public/videos/tvStatic.gif";
+import tvPost from "../../public/videos/tvStaticMagnetic.gif";
+
 // Adjust these as needed
 const ROWS_AMOUNT = 10;
 const COLS_AMOUNT = 10;
@@ -30,15 +33,16 @@ for (let i = 1; i < ROWS_AMOUNT; i++) {
 }
 const combinedRows = [...rows.slice().reverse(), ...rows];
 
-// This is the total grid cells
+// total grid cells
 const totalCells = combinedColumns.length * combinedRows.length;
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 16px);
   box-sizing: border-box;
   padding-top: ${_var.headerHeight};
   display: grid;
+  gap: 4px;
 
   /* Dynamically adjust columns */
   grid-template-columns: ${({ $hoveredColumn }) =>
@@ -59,12 +63,11 @@ const Container = styled.div`
 const Item = styled.div`
   position: relative;
   width: 100%;
-  background: ${(props) =>
-    props.$isCategorized ? _var.primary_010 : _var.primary_100};
   cursor: pointer;
   z-index: 0;
+  border-radius: 2px;
 
-  /* We still keep a default <div> for the categorized text overlay */
+  /*  default <div> for the categorized text overlay */
   & div {
     position: absolute;
     width: 100%;
@@ -72,19 +75,78 @@ const Item = styled.div`
     text-transform: uppercase;
     color: ${({ $isCategorized }) => ($isCategorized ? _var.primary_090 : "")};
     white-space: nowrap;
-    padding: ${({ $isCategorized }) => ($isCategorized ? "4px" : "")};
+    padding: ${({ $isCategorized }) => ($isCategorized ? "4px" : "4px")};
   }
 
-  /* Our .cell class will handle X/Y alignment logic */
   & .cell {
-    /* Absolutely position the text in the cell */
     position: absolute;
+    width: 100%;
+    height: 100%;
 
-    /* If $isBottom, place at bottom; else top */
     ${({ $isBottom }) => ($isBottom ? "bottom: 0;" : "top: 0;")}
 
-    /* If $isReversed, align right; else left */
     text-align: ${({ $isReversed }) => ($isReversed ? "right" : "left")};
+
+    & span {
+      position: absolute;
+      background: ${_var.primary_010};
+      opacity: 0;
+    }
+
+    & span:nth-child(1) {
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 1px;
+    }
+    & span:nth-child(2) {
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 8px;
+    }
+    & span:nth-child(3) {
+      top: 0;
+      right: 0;
+      width: 8px;
+      height: 1px;
+    }
+    & span:nth-child(4) {
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 8px;
+    }
+    & span:nth-child(5) {
+      bottom: 0;
+      left: 0;
+      width: 8px;
+      height: 1px;
+    }
+    & span:nth-child(6) {
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      height: 8px;
+    }
+    & span:nth-child(7) {
+      bottom: 0;
+      right: 0;
+      width: 8px;
+      height: 1px;
+    }
+    & span:nth-child(8) {
+      bottom: 0;
+      right: 0;
+      width: 1px;
+      height: 8px;
+    }
+  }
+
+  &:hover {
+    & .cell span {
+      opacity: 1;
+    }
   }
 `;
 
@@ -94,15 +156,63 @@ const Placeholder = styled.div`
   height: 100%;
   overflow: hidden;
   background: ${_var.primary_010};
+  border-radius: 2px;
 
   & div {
     z-index: 1;
+  }
+
+  // title
+  & :nth-child(1) {
+    font-style: italic;
+    font-weight: 800;
+    z-index: 2;
+  }
+
+  // static image
+  & :nth-child(2) {
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    z-index: 3;
+    transition: opacity 100ms ${_var.cubicBezier};
+  }
+
+  // static image alt
+  & :nth-child(3) {
+    opacity: 0.25;
+    mix-blend-mode: screen;
+    z-index: 4;
+    transition: opacity 100ms ${_var.cubicBezier};
+  }
+
+  // image b&w
+  & :nth-child(4) {
+    filter: grayscale(1);
+    z-index: 1;
+    transition: opacity 100ms ${_var.cubicBezier};
+  }
+
+  // image colored
+  & :nth-child(5) {
+    z-index: 0;
   }
 
   & img {
     position: absolute;
     inset: 0;
     object-fit: cover;
+  }
+
+  &:hover {
+    & :nth-child(2) {
+      opacity: 0.25;
+    }
+    & :nth-child(3) {
+      opacity: 0;
+    }
+    & :nth-child(4) {
+      opacity: 0;
+    }
   }
 `;
 
@@ -129,10 +239,9 @@ export default function Home() {
   // Make an array of all cells
   const cellsArray = Array.from(Array(totalCells).keys());
 
-  // For convenience
   const numCols = combinedColumns.length;
 
-  // We'll use this to figure out the boundary between reversed vs. original columns
+  // boundary between reversed vs. original columns
   const leftSideLength = cols.length; // e.g. 10 if COLS_AMOUNT=10
   const topSideLength = rows.length; // e.g. 10
 
@@ -192,7 +301,31 @@ export default function Home() {
                 <Placeholder>
                   <div>{category.type}</div>
                   <Image
-                    key={category.type}
+                    src={tvStatic}
+                    alt="tv static"
+                    fill
+                    sizes="(max-width: 768px) 100vw,
+                           (max-width: 1200px) 50vw,
+                           33vw"
+                  />
+                  <Image
+                    src={tvPost}
+                    alt="tv static"
+                    fill
+                    sizes="(max-width: 768px) 100vw,
+                           (max-width: 1200px) 50vw,
+                           33vw"
+                  />
+                  <Image
+                    src={category.img}
+                    alt={category.type}
+                    placeholder="blur"
+                    fill
+                    sizes="(max-width: 768px) 100vw,
+                           (max-width: 1200px) 50vw,
+                           33vw"
+                  />
+                  <Image
                     src={category.img}
                     alt={category.type}
                     placeholder="blur"
@@ -204,7 +337,17 @@ export default function Home() {
                 </Placeholder>
               </Link>
             ) : (
-              <div className="cell">({cell})</div>
+              <div className="cell">
+                {cell + 1}
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             )}
           </Item>
         );

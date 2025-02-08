@@ -1,8 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as _var from "../../styles/variables";
 
 import { Section, Wrapper } from "../../components/sections/Section";
+
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 
 const StyledSection = styled(Section)`
   position: relative;
@@ -23,11 +32,7 @@ const StyledWrapper = styled(Wrapper)`
   align-items: center;
   gap: ${_var.spaceM};
   opacity: 0;
-  transition: opacity 500ms ${_var.cubicBezier};
-
-  &.active {
-    opacity: 1;
-  }
+  animation: 2s ${fadeIn} ease-in-out forwards;
 `;
 
 const Video = styled.video`
@@ -40,6 +45,8 @@ const Video = styled.video`
   pointer-events: none;
   mix-blend-mode: multiply;
   z-index: 2;
+  opacity: 0;
+  animation: 2s ${fadeIn} ease-in-out forwards;
 
   @media ${_var.device.desktop_max} {
     transform: scale(2);
@@ -121,15 +128,13 @@ const Paragraph = styled.p`
 
 const Space = () => {
   const videoRef = useRef(null);
-  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
     const handleLoadedMetadata = () => {
-      setIsVideoReady(true);
       if (videoRef.current) {
-        videoRef.current.currentTime = 11.5;
-        videoRef.current.playbackRate = 0.5;
-        videoRef.current.play();
+        videoRef.current.currentTime = 11.5; // Start at 11.5s
+        videoRef.current.playbackRate = 0.5; // Slow motion
+        videoRef.current.play(); // Auto-play
       }
     };
 
@@ -146,7 +151,7 @@ const Space = () => {
         );
       }
     };
-  }, [videoRef]);
+  }, []);
 
   const base = 16;
   const scale = 0.1;
@@ -168,7 +173,7 @@ const Space = () => {
       <Video ref={videoRef} playsInline autoPlay muted loop preload="auto">
         <source src="videos/universeSimulation.webm" type="video/webm" />
       </Video>
-      <StyledWrapper className={isVideoReady ? "active" : ""}>
+      <StyledWrapper>
         <p
           style={{
             textAlign: "center",
