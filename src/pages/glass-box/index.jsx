@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import * as faceapi from "face-api.js";
 import styled from "styled-components";
@@ -65,37 +65,16 @@ const GlassBox = () => {
 
   const toggleExperience = async () => {
     if (isStarted) {
-      // 🛑 Stop Everything
-      setIsStarted(false);
-      setActive(true); // Reset face tracking
-
-      if (audioPlayerRef.current) audioPlayerRef.current.pause();
-      if (audioEffectPlayerRef.current) {
-        audioEffectPlayerRef.current.pause();
-        audioEffectPlayerRef.current.volume = 0; // Ensure effect sound stops
-      }
-
-      if (videoElementRef.current) {
-        videoElementRef.current.pause();
-        if (videoElementRef.current.srcObject) {
-          videoElementRef.current.srcObject
-            .getTracks()
-            .forEach((track) => track.stop());
-        }
-        videoElementRef.current.srcObject = null;
-      }
-
-      if (faceDetectionIntervalRef.current) {
-        clearInterval(faceDetectionIntervalRef.current);
-      }
-
+      stopExperience();
       return;
     }
 
-    // ✅ Start Everything
+    startExperience();
+  };
+
+  const startExperience = async () => {
     setIsStarted(true);
 
-    // Load Face API models
     await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
     await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
 
@@ -108,7 +87,6 @@ const GlassBox = () => {
 
       videoElement.onloadeddata = () => setLoading(false);
 
-      // Face Detection Function
       const detectFace = async () => {
         const detections = await faceapi
           .detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
@@ -127,12 +105,12 @@ const GlassBox = () => {
           setActive(isLooking);
 
           if (audioEffectPlayerRef.current) {
-            audioEffectPlayerRef.current.volume = isLooking ? 0 : 1; // Effect sound plays only when NOT looking
+            audioEffectPlayerRef.current.volume = isLooking ? 0 : 1;
           }
         } else {
           setActive(false);
           if (audioEffectPlayerRef.current) {
-            audioEffectPlayerRef.current.volume = 1; // Effect sound plays when NO face detected
+            audioEffectPlayerRef.current.volume = 1;
           }
         }
       };
@@ -143,7 +121,6 @@ const GlassBox = () => {
       setLoading(false);
     }
 
-    // 🎵 Start Background Audio
     if (audioPlayerRef.current) {
       audioPlayerRef.current.loop = true;
       audioPlayerRef.current.volume = 0.5;
@@ -152,7 +129,6 @@ const GlassBox = () => {
         .catch((err) => console.error("Error playing background audio: ", err));
     }
 
-    // 🔊 Effect Audio (Initially Muted)
     if (audioEffectPlayerRef.current) {
       audioEffectPlayerRef.current.loop = true;
       audioEffectPlayerRef.current.volume = 0;
@@ -161,6 +137,38 @@ const GlassBox = () => {
         .catch((err) => console.error("Error playing effect audio: ", err));
     }
   };
+
+  const stopExperience = () => {
+    setIsStarted(false);
+    setActive(true);
+
+    if (audioPlayerRef.current) audioPlayerRef.current.pause();
+    if (audioEffectPlayerRef.current) {
+      audioEffectPlayerRef.current.pause();
+      audioEffectPlayerRef.current.volume = 0;
+    }
+
+    if (videoElementRef.current) {
+      videoElementRef.current.pause();
+      if (videoElementRef.current.srcObject) {
+        videoElementRef.current.srcObject
+          .getTracks()
+          .forEach((track) => track.stop());
+      }
+      videoElementRef.current.srcObject = null;
+    }
+
+    if (faceDetectionIntervalRef.current) {
+      clearInterval(faceDetectionIntervalRef.current);
+      faceDetectionIntervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopExperience();
+    };
+  }, []);
 
   return (
     <StyledSection onClick={toggleExperience}>
