@@ -1,4 +1,4 @@
-import RootLayout from "./rootLayout/rootLayout";
+import RootLayout from "./rootLayout";
 
 import { createGlobalStyle } from "styled-components";
 import * as _var from "../styles/variables";
