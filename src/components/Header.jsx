@@ -1,10 +1,9 @@
-import React from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import * as _var from "../styles/variables";
 
 import Logo from "./Logo";
-import IconPrevious from "./icons/IconPrevious";
 
 const Container = styled.header`
   position: fixed;
@@ -34,23 +33,24 @@ const Wrapper = styled.nav`
   padding: ${_var.spaceXS};
 `;
 
-const Ul = styled.ul`
-  display: flex;
-  gap: ${_var.spaceS};
-`;
-
 const Header = () => {
+  const [theme, setTheme] = useState("light");
+
+  const router = useRouter();
+  const pathname = router.asPath;
+
+  useEffect(() => {
+    pathname === "/moving-through-space-and-time" ||
+    pathname === "/glass-box" ||
+    pathname === "/the-thin-blue-line"
+      ? setTheme("dark")
+      : setTheme("light");
+  }, [pathname]);
+
   return (
     <Container id="#top">
       <Wrapper>
-        <Link href="/">
-          <Logo />
-        </Link>
-        <Ul>
-          <li>
-            <IconPrevious />
-          </li>
-        </Ul>
+        <Logo theme={theme} />
       </Wrapper>
     </Container>
   );

@@ -199,6 +199,7 @@ const GlassBox = () => {
             zIndex: "9999",
             textTransform: "uppercase",
             fontStyle: "italic",
+            fontWeight: 600
           }}
         >
           Click to Start

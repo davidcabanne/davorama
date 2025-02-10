@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import styled from "styled-components";
 import * as _var from "../../styles/variables";
 
@@ -59,15 +58,16 @@ const CapitalismContainer = styled.div`
 
 const TitlePanel = styled.div`
   position: relative;
-  width: 50%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 
 const Title = styled.p`
   font-style: italic;
   font-family: georgia;
+  font-size: clamp(2px, 2vw, 16px);
+  margin-left: calc(23%);
 
   &.subtitle {
     position: absolute;
@@ -131,9 +131,9 @@ const Capitalism = () => {
   return (
     <StyledSection>
       <Wrapper>
-        <TitlePanel>
+        <TitlePanel style={{ width: width }}>
           <Title>Live life love laugh</Title>
-          <Title className="subtitle">Die death hate rage</Title>
+          <Title className="subtitle">Die death hate cry</Title>
         </TitlePanel>
         <CapitalismContainer
           ref={containerRef}

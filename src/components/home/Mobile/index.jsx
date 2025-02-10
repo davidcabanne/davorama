@@ -16,14 +16,12 @@ const Container = styled.div`
   width: 100%;
   margin-top: ${_var.headerHeight};
   display: grid;
-  grid-template-columns:
-    calc(100vw / 16) calc(100vw / 8) calc(100vw / 4) calc(100vw / 2) calc(
-      100vw / 2
-    )
-    calc(100vw / 4) calc(100vw / 8)
-    calc(100vw / 16);
+  grid-template-columns: 1fr 2fr 4fr 8fr 8fr 4fr 2fr 1fr;
 
-  grid-template-rows: repeat(10, calc((100vh - ${_var.headerHeight}) / 5));
+  grid-template-rows: repeat(
+    10,
+    calc((100vh - ${_var.headerHeight} - 16px) / 5)
+  );
 
   @media ${_var.device.tablet_min} {
     display: none;
@@ -31,10 +29,12 @@ const Container = styled.div`
 
   @media ${_var.device.mobileL_max} {
     grid-template-columns: calc(100vw / 8) 1fr 1fr calc(100vw / 8);
+    grid-template-rows: repeat(20, calc((100vh - ${_var.headerHeight}) / 5));
   }
 
   @media ${_var.device.mobileS_max} {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(40, calc((100vh - ${_var.headerHeight}) / 5));
   }
 `;
 
@@ -42,7 +42,7 @@ const Item = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: calc(200vh / 12);
+  /* min-height: calc(200vh / 12); */
   overflow: hidden;
   border-radius: 2px;
 
@@ -89,6 +89,7 @@ const Cell = styled.div`
   width: 100%;
   height: 100%;
   color: ${_var.primary_010};
+  font-size: 8px;
   opacity: 1;
   text-align: ${({ $isReversed }) => ($isReversed ? "left" : "right")};
 `;
