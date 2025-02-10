@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import styled from "styled-components";
 import * as _var from "../styles/variables";
 
 import Logo from "./Logo";
-import IconPrevious from "./icons/IconPrevious";
 
 const Container = styled.header`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: 56px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   z-index: 100;
 
   & a {
-    color: ${_var.clr_dark};
+    color: ${_var.primary_010};
     text-decoration: none;
     cursor: pointer;
   }
@@ -30,13 +29,8 @@ const Wrapper = styled.nav`
   height: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: ${_var.spaceS};
-`;
-
-const Ul = styled.ul`
-  display: flex;
-  gap: ${_var.spaceS};
+  align-items: center;
+  padding: ${_var.spaceXS};
 `;
 
 const Header = () => {
@@ -46,7 +40,9 @@ const Header = () => {
   const pathname = router.asPath;
 
   useEffect(() => {
-    pathname === "/moving-through-space-and-time"
+    pathname === "/moving-through-space-and-time" ||
+    pathname === "/glass-box" ||
+    pathname === "/the-thin-blue-line"
       ? setTheme("dark")
       : setTheme("light");
   }, [pathname]);
@@ -54,14 +50,7 @@ const Header = () => {
   return (
     <Container id="#top">
       <Wrapper>
-        <Link href="/">
-          <Logo theme={theme} />
-        </Link>
-        <Ul>
-          <li>
-            <IconPrevious theme={theme} />
-          </li>
-        </Ul>
+        <Logo theme={theme} />
       </Wrapper>
     </Container>
   );

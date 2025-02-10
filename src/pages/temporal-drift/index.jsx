@@ -8,27 +8,22 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 0px ${_var.spaceL};
+  align-items: flex-start;
 `;
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  max-width: 1280px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
   cursor: pointer;
+  overflow: hidden;
 `;
 
 const Video = styled.video`
   position: absolute;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
-  mix-blend-mode: multiply;
-  filter: saturate(1);
 `;
 
 const TemporalDrift = () => {
@@ -152,7 +147,7 @@ const TemporalDrift = () => {
           loop
           playsInline
           controls=""
-          style={{ mixBlendMode: "overlay" }}
+          style={{ mixBlendMode: "overlay", zIndex: 10 }}
         />
         <Video
           ref={secondRef}
@@ -161,7 +156,7 @@ const TemporalDrift = () => {
           loop
           playsInline
           controls=""
-          style={{ mixBlendMode: "overlay" }}
+          style={{ mixBlendMode: "overlay", zIndex: 9 }}
         />
         <Video
           ref={thirdRef}
@@ -170,7 +165,7 @@ const TemporalDrift = () => {
           loop
           playsInline
           controls=""
-          style={{ mixBlendMode: "multiply" }}
+          style={{ mixBlendMode: "multiply", zIndex: 1 }}
         />
       </Wrapper>
     </Container>

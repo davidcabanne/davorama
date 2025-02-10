@@ -1,48 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import * as faceapi from "face-api.js";
 import styled from "styled-components";
 
 import { Section } from "@/components/sections/Section";
-import { slowMovement, erraticMovement } from "../../components/utils/keyframes";
+import {
+  slowMovement,
+  erraticMovement,
+} from "../../components/utils/keyframes";
 
 import twinPeaksRoom from "../../../public/images/face-detection/twinPeaksRoom.jpg";
 import twinPeaksRoomActive from "../../../public/images/face-detection/twinPeaksRoomActive.jpg";
 
 const StyledSection = styled(Section)`
   height: 100vh;
-
-  & img {
-    object-fit: cover;
-  }
-
-  & audio {
-    display: none;
-  }
+  cursor: pointer;
 `;
 
 const Overlay = styled.div`
   position: absolute;
   inset: 0;
   z-index: 10;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: #080202;
-    opacity: 0.5;
-    transition: 150ms opacity ease-in-out;
-  }
+  background: rgba(8, 2, 2, 0.5);
+  transition: opacity 150ms ease-in-out;
 
   &.active {
-    &::after {
-      opacity: 0;
-    }
+    opacity: 0;
   }
 `;
 
 const ActiveImageDouble = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   transition: 150ms opacity ease-in-out;
   animation: ${erraticMovement} 500ms infinite alternate reverse;
@@ -53,6 +46,12 @@ const ActiveImageDouble = styled(Image)`
 `;
 
 const ActiveImage = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   transition: 150ms opacity ease-in-out;
   animation: ${erraticMovement} 500ms infinite alternate;
@@ -63,124 +62,162 @@ const ActiveImage = styled(Image)`
 `;
 
 const BackgroundImage = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   animation: ${slowMovement} 120000ms infinite alternate;
 `;
 
 const GlassBox = () => {
-  const audioPlayerRef = useRef(null);
-  const audioEffectPlayerRef = useRef(null);
+  const audioPlayerRef = useRef(null); // Main background audio
+  const audioEffectPlayerRef = useRef(null); // Effect audio
   const videoElementRef = useRef(null);
+  const faceDetectionIntervalRef = useRef(null);
 
-  const [active, setActive] = useState(true); // Start with `true` to keep animations running until the stream is ready
-  const [loading, setLoading] = useState(true); // New state to track loading
+  const [isStarted, setIsStarted] = useState(false); // Controls the entire experience
+  const [active, setActive] = useState(true); // Controls face tracking
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let stream;
-
-    const loadModelsAndStartDetection = async () => {
-      await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
-      await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const videoElement = document.createElement("video");
-        videoElement.srcObject = stream;
-        videoElement.play();
-        videoElementRef.current = videoElement;
-
-        videoElement.onloadeddata = () => {
-          setLoading(false); // Stream is loaded, stop showing the animation
-        };
-
-        const detectFace = async () => {
-          const detections = await faceapi
-            .detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
-            .withFaceLandmarks();
-
-          if (detections.length > 0) {
-            const landmarks = detections[0].landmarks;
-            const leftEye = landmarks.getLeftEye();
-            const rightEye = landmarks.getRightEye();
-            const nose = landmarks.getNose();
-
-            const eyeCenter = (leftEye[3].x + rightEye[0].x) / 2;
-            const noseCenter = nose[3].x;
-
-            setActive(Math.abs(eyeCenter - noseCenter) < 10);
-          } else {
-            setActive(false);
-          }
-        };
-
-        const intervalId = setInterval(detectFace, 100);
-
-        return () => {
-          clearInterval(intervalId);
-          stream.getTracks().forEach((track) => track.stop());
-        };
-      } catch (err) {
-        console.error("Error accessing webcam: ", err);
-        setLoading(false); // In case of error, stop showing the animation
-      }
-    };
-
-    loadModelsAndStartDetection();
-
-    // Play audio on loop when component loads
-    if (audioPlayerRef.current) {
-      audioPlayerRef.current.loop = true; // Ensure the audio plays on loop
-      audioPlayerRef.current.volume = 0.5; // Set volume to 50% (you can adjust this value)
-      audioPlayerRef.current.play().catch((err) => {
-        console.error("Error playing audio: ", err);
-      });
+  const toggleExperience = async () => {
+    if (isStarted) {
+      stopExperience();
+      return;
     }
-    // Play audio on loop when component loads
+
+    startExperience();
+  };
+
+  const startExperience = async () => {
+    setIsStarted(true);
+
+    await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+    await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const videoElement = document.createElement("video");
+      videoElement.srcObject = stream;
+      videoElement.play();
+      videoElementRef.current = videoElement;
+
+      videoElement.onloadeddata = () => setLoading(false);
+
+      const detectFace = async () => {
+        const detections = await faceapi
+          .detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks();
+
+        if (detections.length > 0) {
+          const landmarks = detections[0].landmarks;
+          const leftEye = landmarks.getLeftEye();
+          const rightEye = landmarks.getRightEye();
+          const nose = landmarks.getNose();
+
+          const eyeCenter = (leftEye[3].x + rightEye[0].x) / 2;
+          const noseCenter = nose[3].x;
+
+          const isLooking = Math.abs(eyeCenter - noseCenter) < 10;
+          setActive(isLooking);
+
+          if (audioEffectPlayerRef.current) {
+            audioEffectPlayerRef.current.volume = isLooking ? 0 : 1;
+          }
+        } else {
+          setActive(false);
+          if (audioEffectPlayerRef.current) {
+            audioEffectPlayerRef.current.volume = 1;
+          }
+        }
+      };
+
+      faceDetectionIntervalRef.current = setInterval(detectFace, 100);
+    } catch (err) {
+      console.error("Error accessing webcam: ", err);
+      setLoading(false);
+    }
+
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.loop = true;
+      audioPlayerRef.current.volume = 0.5;
+      audioPlayerRef.current
+        .play()
+        .catch((err) => console.error("Error playing background audio: ", err));
+    }
+
     if (audioEffectPlayerRef.current) {
       audioEffectPlayerRef.current.loop = true;
       audioEffectPlayerRef.current.volume = 0;
-      audioEffectPlayerRef.current.play().catch((err) => {
-        console.error("Error playing audio: ", err);
-      });
+      audioEffectPlayerRef.current
+        .play()
+        .catch((err) => console.error("Error playing effect audio: ", err));
+    }
+  };
+
+  const stopExperience = () => {
+    setIsStarted(false);
+    setActive(true);
+
+    if (audioPlayerRef.current) audioPlayerRef.current.pause();
+    if (audioEffectPlayerRef.current) {
+      audioEffectPlayerRef.current.pause();
+      audioEffectPlayerRef.current.volume = 0;
     }
 
-    return () => {
-      // Cleanup: Stop the video stream when component unmounts or page changes
-      if (videoElementRef.current) {
-        videoElementRef.current.pause();
-        if (videoElementRef.current.srcObject) {
-          videoElementRef.current.srcObject.getTracks().forEach((track) => {
-            track.stop();
-          });
-        }
-        videoElementRef.current.srcObject = null;
+    if (videoElementRef.current) {
+      videoElementRef.current.pause();
+      if (videoElementRef.current.srcObject) {
+        videoElementRef.current.srcObject
+          .getTracks()
+          .forEach((track) => track.stop());
       }
+      videoElementRef.current.srcObject = null;
+    }
+
+    if (faceDetectionIntervalRef.current) {
+      clearInterval(faceDetectionIntervalRef.current);
+      faceDetectionIntervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopExperience();
     };
   }, []);
 
-  useEffect(() => {
-    if (audioEffectPlayerRef.current && !active) {
-      audioEffectPlayerRef.current.volume = 1;
-    }
-    if (audioEffectPlayerRef.current && active) {
-      audioEffectPlayerRef.current.volume = 0;
-    }
-  }, [active]);
-
   return (
-    <StyledSection>
+    <StyledSection onClick={toggleExperience}>
+      {!isStarted && (
+        <div
+          style={{
+            position: "absolute",
+            color: "white",
+            fontSize: "32px",
+            zIndex: "9999",
+            textTransform: "uppercase",
+            fontStyle: "italic",
+            fontWeight: 600
+          }}
+        >
+          Click to Start
+        </div>
+      )}
       <Overlay className={active ? "active" : ""} />
       <ActiveImageDouble
         src={twinPeaksRoomActive}
         alt="twin peaks room"
         fill
-        className={!active && !loading ? "active" : ""}
+        className={isStarted && !active && !loading ? "active" : ""}
         style={{ zIndex: 2 }}
       />
       <ActiveImage
         src={twinPeaksRoomActive}
         alt="twin peaks room"
         fill
-        className={!active && !loading ? "active" : ""}
+        className={isStarted && !active && !loading ? "active" : ""}
         style={{ zIndex: 1 }}
       />
       <BackgroundImage
@@ -189,8 +226,8 @@ const GlassBox = () => {
         fill
         style={{ zIndex: 0 }}
       />
-      <audio ref={audioEffectPlayerRef} controls src="./audios/powerSurge.mp3"></audio>
-      <audio ref={audioPlayerRef} controls src="./audios/powerlineTension.mp3"></audio>
+      <audio ref={audioEffectPlayerRef} src="./audios/powerSurge.mp3"></audio>
+      <audio ref={audioPlayerRef} src="./audios/powerlineTension.mp3"></audio>
     </StyledSection>
   );
 };
