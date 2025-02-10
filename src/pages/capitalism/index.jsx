@@ -51,7 +51,7 @@ const CapitalismContainer = styled.div`
 
     &::selection {
       color: ${_var.clr_danger};
-      background: ${_var.clr_dark};
+      background: ${_var.primary_010};
     }
   }
 `;
@@ -76,7 +76,7 @@ const Title = styled.p`
 
     &::selection {
       color: ${_var.clr_danger};
-      background: ${_var.clr_dark};
+      background: ${_var.primary_010};
     }
   }
 `;
