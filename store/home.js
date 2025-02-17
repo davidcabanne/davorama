@@ -5,6 +5,7 @@ import temporalDrift from "../public/images/categories/temporalDrift.jpg";
 import theThinBlueLie from "../public/images/categories/theThinBlueLie.jpg";
 import capitalism from "../public/images/categories/capitalism.png";
 import film from "../public/images/categories/london2024.jpg";
+import breche2023 from "../public/images/categories/breche2023.jpg";
 
 const categories = [
   {
@@ -29,6 +30,11 @@ const categories = [
     name: "films",
     img: film,
     link: "/films-all",
+  },
+  {
+    name: "memories",
+    img: breche2023,
+    link: "/corrupted-memories",
   },
 ];
 
