@@ -85,17 +85,23 @@ const Cell = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  ${({ $isBottom }) => ($isBottom ? "bottom: 0;" : "top: 0;")}
-  text-align: ${({ $isReversed }) => ($isReversed ? "right" : "left")};
+  bottom: ${({ $isBottom }) => ($isBottom ? "0" : "")};
+
+  & p {
+    position: absolute;
+    font-size: 12px;
+    /* ${({ $isBottom }) => ($isBottom ? "bottom: 0;" : "top: 0;")} */
+    /* ${({ $isReversed }) => ($isReversed ? "left: 0;" : "right: 0;")} */
+  }
 
   // <Spans /> display: none;
-  & div:nth-child(1) {
+  & div:nth-child(2) {
     display: none;
   }
 
   &:hover {
     // <Spans /> display: block;
-    & div:nth-child(1) {
+    & div:nth-child(2) {
       display: block;
     }
   }
@@ -274,8 +280,8 @@ const Desktop = () => {
                 </Placeholder>
               </Link>
             ) : (
-              <Cell>
-                {cell + 1}
+              <Cell $isBottom={isBottom} $isReversed={isReversed}>
+                <p>{cell + 1}</p>
                 <Spans />
               </Cell>
             )}
